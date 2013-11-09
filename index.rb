@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'rest-client'
+require 'yammer'
 
 YAMMER_CLIENT_ID = 'wN7Tyzyeo5eXxXe7MP9U2g'
 YAMMER_CLIENT_SECRET = 'Fk0njVHhYH59TdaXEVOW69yHl8NIbIdohNgTK75w'
@@ -28,11 +29,11 @@ class MyApplication < Sinatra::Base
     yc = Yammer::Client.new(:access_token => oauth_token)
 
 
-    network_users = c.all_users.body
+    network_users = yc.all_users.body
     puts "network_users: #{network_users}"
-    rtnstr = "Your network: #{network_users[0]['network_name']}:<br /><ul>"
+    rtnstr = "Your network #{network_users[0][:network_name]}:<br /><ul>"
     for user in network_users
-      rtnstr += "<li>#{user['full_name']}</li>"
+      rtnstr += "<li>#{user[:full_name]}</li>"
     end
     rtnstr += "</ul>"
     return rtnstr
