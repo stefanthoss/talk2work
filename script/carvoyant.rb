@@ -17,8 +17,10 @@ cars.each do |car|
   # puts "\n=== #{car["vehicleId"]}: #{car["name"]} ==="
   trips = get_rest_call("/vehicle/#{car["vehicleId"]}/trip")["trip"]
   trips.each do |trip|
-    # puts "#{trip["startWaypoint"]["latitude"]},#{trip["startWaypoint"]["longitude"]} -> #{trip["endWaypoint"]["latitude"]},#{trip["endWaypoint"]["longitude"]}"
-    puts "#{trip["startWaypoint"]["latitude"]},#{trip["startWaypoint"]["longitude"]}"
-    puts "#{trip["endWaypoint"]["latitude"]},#{trip["endWaypoint"]["longitude"]}"
+    unless trip["startWaypoint"].nil? || trip["endWaypoint"].nil?
+      # puts "#{trip["startWaypoint"]["latitude"]},#{trip["startWaypoint"]["longitude"]} -> #{trip["endWaypoint"]["latitude"]},#{trip["endWaypoint"]["longitude"]}"
+      puts "#{trip["startWaypoint"]["latitude"]},#{trip["startWaypoint"]["longitude"]} dot1 green"
+      puts "#{trip["endWaypoint"]["latitude"]},#{trip["endWaypoint"]["longitude"]} dot1 red"
+    end
   end
 end
