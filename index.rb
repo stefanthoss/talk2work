@@ -9,7 +9,9 @@ YAMMER_REDIRECT_URI = 'http://192.241.233.188/auth/yammer/callback'
 
 class MyApplication < Sinatra::Base
   use Rack::Session::Cookie, :secret => 'Ea2Cie1beir2ChuwahceiPheequees5l'
-  use OmniAuth::Strategies::Yammer, YAMMER_CLIENT_ID, YAMMER_CLIENT_SECRET
+  use OmniAuth::Builder do
+    provider :yammer, YAMMER_CLIENT_ID, YAMMER_CLIENT_SECRET
+  end
 
   get '/?' do
     "Hello World! <a href=\"https://www.yammer.com/dialog/oauth?client_id=#{YAMMER_CLIENT_ID}&redirect_uri=#{YAMMER_REDIRECT_URI}\">Login</a>"
