@@ -10,3 +10,4 @@ gem "rest-client"
 gem "json"
 gem 'omniauth', '~> 1.0'
 gem 'omniauth-yammer'
+gem "mysql2"
