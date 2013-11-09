@@ -15,6 +15,10 @@ class MyApplication < Sinatra::Base
     "Hello World! <a href=\"https://www.yammer.com/dialog/oauth?client_id=#{YAMMER_CLIENT_ID}&redirect_uri=#{YAMMER_REDIRECT_URI}\">Login</a>"
   end
 
+  get '/auth/failure' do
+    halt 401, params['message']
+  end
+
   get '/auth/yammer/callback' do
     yammer_token = request.env['omniauth.auth']
     puts "authtoken: #{yammer_token}"
