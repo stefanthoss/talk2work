@@ -20,11 +20,20 @@ rest_call("/vehicle")["vehicle"].each do |car|
   puts "\n=== #{car["vehicleId"]}: #{car["name"]} ==="
   client.query("INSERT INTO cars (id, car_name) VALUES (#{car["vehicleId"]}, '#{car["name"]}')")
 
-  trips = rest_call("/vehicle/#{car["vehicleId"]}/trip")["trip"]
-  trips.each do |trip|
-    unless trip["startWaypoint"].nil? || trip["endWaypoint"].nil? || trip["startWaypoint"]["latitude"].to_i == 0
-      client.query("INSERT INTO trips (id, start_lat, start_lng, end_lat, end_lng) VALUES (#{trip["id"]}, #{trip["startWaypoint"]["latitude"]}, #{trip["startWaypoint"]["longitude"]}, #{trip["endWaypoint"]["latitude"]}, #{trip["endWaypoint"]["longitude"]})")
-      puts "#{trip["startWaypoint"]["latitude"]},#{trip["startWaypoint"]["longitude"]} -> #{trip["endWaypoint"]["latitude"]},#{trip["endWaypoint"]["longitude"]}"
+  more_trips = true
+  i = 0
+  while more_trips
+    trips = rest_call("/vehicle/#{car["vehicleId"]}/trip?searchLimit=100&searchOffset=#{i}")["trip"]
+    if trips.empty?
+      more_trips = false
+    else
+      trips.each do |trip|
+        unless trip["startWaypoint"].nil? || trip["endWaypoint"].nil? || trip["startWaypoint"]["latitude"].to_i == 0
+          client.query("INSERT INTO trips (id, start_lat, start_lng, end_lat, end_lng) VALUES (#{trip["id"]}, #{trip["startWaypoint"]["latitude"]}, #{trip["startWaypoint"]["longitude"]}, #{trip["endWaypoint"]["latitude"]}, #{trip["endWaypoint"]["longitude"]})")
+          puts "#{trip["startWaypoint"]["latitude"]},#{trip["startWaypoint"]["longitude"]} -> #{trip["endWaypoint"]["latitude"]},#{trip["endWaypoint"]["longitude"]}"
+        end
+      end
     end
+    i = i + 100
   end
 end
