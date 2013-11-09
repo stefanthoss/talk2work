@@ -8,10 +8,10 @@ YAMMER_CLIENT_SECRET = 'Fk0njVHhYH59TdaXEVOW69yHl8NIbIdohNgTK75w'
 YAMMER_REDIRECT_URI = 'http://192.241.233.188/auth/yammer/callback'
 
 class MyApplication < Sinatra::Base
-  use Rack::Session::Cookie, :secret => 'Ea2Cie1beir2ChuwahceiPheequees5l'
-  use OmniAuth::Builder do
-    provider :yammer, YAMMER_CLIENT_ID, YAMMER_CLIENT_SECRET
-  end
+  # use Rack::Session::Cookie, :secret => 'Ea2Cie1beir2ChuwahceiPheequees5l'
+  # use OmniAuth::Builder do
+  #   provider :yammer, YAMMER_CLIENT_ID, YAMMER_CLIENT_SECRET
+  # end
 
   get '/?' do
     "Hello World! <a href=\"https://www.yammer.com/dialog/oauth?client_id=#{YAMMER_CLIENT_ID}&redirect_uri=#{YAMMER_REDIRECT_URI}\">Login</a>"
@@ -22,6 +22,10 @@ class MyApplication < Sinatra::Base
   end
 
   get '/auth/yammer/callback' do
+    auth_code = params[:code]
+    url = "https://www.yammer.com/oauth2/access_token.json?client_id=#{YAMMER_CLIENT_ID}"
+    token_reponse = RestClient.post(url, code: auth_code)
+    raise Exception.new(token_reponse)
     yammer_token = request.env['omniauth.auth']
     puts "authtoken: #{yammer_token}"
     network_users = JSON.parse(RestClient.get("https://www.yammer.com/api/v1/users.json", headers: { 'Authorization' => "Bearer #{yammer_token}" }))
