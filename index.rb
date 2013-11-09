@@ -1,6 +1,9 @@
 require 'sinatra'
 require 'rest-client'
 require 'yammer'
+require 'mysql2'
+require 'yaml'
+require 'json'
 
 YAMMER_CLIENT_ID = 'wN7Tyzyeo5eXxXe7MP9U2g'
 YAMMER_CLIENT_SECRET = 'Fk0njVHhYH59TdaXEVOW69yHl8NIbIdohNgTK75w'
@@ -47,5 +50,28 @@ class MyApplication < Sinatra::Base
     end
     rtnstr += "</ul>"
     return rtnstr
+  end
+
+  get '/map' do
+    erb :map
+  end
+
+  get '/js/GeoJSON.js' do
+    send_file 'js/GeoJSON.js'
+  end
+
+  get '/map_data.json' do
+    content_type :json
+
+    # open database connection
+    dbconfig = YAML::load(File.open('config/database.yml'))
+    client = Mysql2::Client.new(dbconfig)
+    
+    coords = []
+    client.query("SELECT * FROM trips").each(:symbolize_keys => true) do |trip|
+      coords << [trip[:end_lng], trip[:end_lat]]
+    end
+
+    JSON.generate({ type: "MultiPoint", coordinates: coords })
   end
 end
