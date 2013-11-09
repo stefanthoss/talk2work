@@ -18,7 +18,7 @@ client = Mysql2::Client.new(dbconfig)
 
 rest_call("/vehicle")["vehicle"].each do |car|
   puts "\n=== #{car["vehicleId"]}: #{car["name"]} ==="
-  client.query("INSERT INTO cars (id, name) VALUES (#{car["vehicleId"]}, '#{car["name"]}')")
+  client.query("INSERT INTO cars (id, car_name) VALUES (#{car["vehicleId"]}, '#{car["name"]}')")
 
   trips = rest_call("/vehicle/#{car["vehicleId"]}/trip")["trip"]
   trips.each do |trip|
