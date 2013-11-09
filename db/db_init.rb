@@ -4,7 +4,6 @@ require 'yaml'
 # This scripts creates all necessary database tables. If the tables already exists, they will be deleted first.
 
 dbconfig = YAML::load(File.open('config/database.yml'))
-
 client = Mysql2::Client.new(dbconfig)
 
 puts "Create table cars..."
