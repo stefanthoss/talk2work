@@ -19,8 +19,16 @@ class MyApplication < Sinatra::Base
       halt 500, "Invalid response code while authenticating: #{token_reponse.code}"
     end
     oauth_token = JSON.parse(token_reponse.body)['access_token']['token']
-    puts "authtoken: #{yammer_token}"
-    network_users = JSON.parse(RestClient.get("https://www.yammer.com/api/v1/users.json", headers: { 'Authorization' => "Bearer #{oauth_token}" }))
+    puts "authtoken: #{oauth_token}"
+
+    Yammer.configure do |c|
+      c.client_id = YAMMER_CLIENT_ID
+      c.client_secret = YAMMER_CLIENT_SECRET
+    end
+    yc = Yammer::Client.new(:access_token => oauth_token)
+
+
+    network_users = c.all_users.body
     puts "network_users: #{network_users}"
     rtnstr = "Your network: #{network_users[0]['network_name']}:<br /><ul>"
     for user in network_users
