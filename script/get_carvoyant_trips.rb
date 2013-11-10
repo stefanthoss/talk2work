@@ -37,7 +37,7 @@ rest_call("/vehicle")["vehicle"].each do |car|
           puts "#{trip["startWaypoint"]["latitude"]},#{trip["startWaypoint"]["longitude"]} -> #{trip["endWaypoint"]["latitude"]},#{trip["endWaypoint"]["longitude"]}"
         end
       end
-      fuel_rate_data.each { |r| fuel_rates << r["value"] if r["value"].to_f > 0.0 }
+      fuel_rate_data.each { |r| fuel_rates << r["value"].to_f if r["value"].to_f > 0.0 }
     end
     i = i + offset
   end
