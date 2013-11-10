@@ -18,7 +18,7 @@ class MyApplication < Sinatra::Base
   helpers Helpers
 
   before do
-    @center = [37.783333, -122.416667]
+    @center = [34.135234, -118.413425]
     @scheduledate = ('Tomorrow, ' + (Date.today + 1).strftime("%B %d")).upcase
   end
 
@@ -86,7 +86,7 @@ class MyApplication < Sinatra::Base
 
   get '/commute_data.json' do
     user = user(session[:userid])
-    { home: [user['lat'], user['lon']], work: [37.3859730,-121.9534680] }.to_json
+    { home: [user['lat'], user['lon']], work: [34.239089, -118.372419] }.to_json
   end
 
   get '/join' do

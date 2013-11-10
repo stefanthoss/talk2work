@@ -17,22 +17,22 @@ usernames = [
   'Neil McCarthy',
 ]
 latitudes = [
-  37.454965,
-  37.454965,
-  37.454965,
-  37.454965,
+  34.046241,
+  34.082264,
+  34.135234,
+  34.150490,
 ]
 longitudes = [
-  -122.14399,
-  -122.14399,
-  -122.14399,
-  -122.14399,
+  -118.529704,
+  -118.434829,
+  -118.413425,
+  -118.397160,
 ]
 addresses = [
-  'address 1',
-  'address 2',
-  'address 3',
-  'address 4',
+  '830 Radcliffe Avenue, Los Angeles, CA, USA',
+  '134 N Beverly Glen Blvd, Los Angeles, CA, USA',
+  '3499 Coldwater Canyon Avenue, Los Angeles, CA, USA',
+  '12117 Moorpark Street, Los Angeles, CA, USA',
 ]
 talkingpoints = [
   'last nights HIMYM',
