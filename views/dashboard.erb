@@ -1,5 +1,5 @@
 <div id="map-canvas" style="float: left; width: 100%; height: 600px;"></div>
-<div id="map-canvas2" style="float: left; width: 70%; height: 600px;"></div>
+<div id="map-canvas2" style="float: left; width: 70%; height: 600px; display: none;"></div>
 <div id="map-overlay" style="width: 100%; height: 600px; background-color: rgba(255, 255, 255, 0.6); position: absolute; top: 0; left: 0;">
 
   <div id="mapoverlaycontainer_dashboard" style="margin: 10% auto; width: 60%; height: 258px;">
@@ -79,8 +79,14 @@
       }, { duration: 500, queue: false, complete: function() {
         // switch maps
         initializeGiveRide(function () {
-          $('#map-canvas').hide();
-          $('#map-canvas2').show();
+          $('#map-canvas').animate({
+            opacity: 0
+          }, { duration: 500, complete: function() {
+            $('#map-canvas').hide();
+            $('#map-canvas2').animate({ show: 'show' }, { duration: 500 });
+            google.maps.event.trigger(map, 'resize');
+            map.fitBounds(bnds);
+          }});
           $('#mapsidebar').animate({
             show: 'show'
           }, { duration: 500, queue: false });
@@ -132,8 +138,6 @@
   function loadMarkers(persons) {
     var infowindow = new google.maps.InfoWindow;
     var marker, i;
-
-    bnds = new google.maps.LatLngBounds();
 
     for(i = 0; i < persons.length; i++){
       marker = new google.maps.Marker({
@@ -296,6 +300,7 @@
     };
 
     /* load markers */
+    bnds = new google.maps.LatLngBounds();
     var xhr = new XMLHttpRequest();
     xhr.open('GET', '/confirm_data.json', true);
     xhr.onload = function() {
@@ -315,9 +320,9 @@
       calculateRoute(callback);
 
       /* fit viewport to all given markers */
-      // bnds.extend(start);
-      // bnds.extend(end);
-      // map.fitBounds(bnds);
+      bnds.extend(start);
+      bnds.extend(end);
+      map.fitBounds(bnds);
     };
     xhr.send();
   }
