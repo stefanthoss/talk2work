@@ -12,7 +12,7 @@ results = client.query("CREATE TABLE cars (id INT NOT NULL, user_id INT, car_nam
 
 puts "Create table trips..."
 results = client.query("DROP TABLE IF EXISTS trips")
-results = client.query("CREATE TABLE trips (id INT NOT NULL, start_lat FLOAT(10,6) NOT NULL, start_lng FLOAT(10,6) NOT NULL, end_lat FLOAT(10,6) NOT NULL, end_lng FLOAT(10,6) NOT NULL, PRIMARY KEY (id))")
+results = client.query("CREATE TABLE trips (id INT NOT NULL, car_id INT NOT NULL, start_lat FLOAT(10,6) NOT NULL, start_lng FLOAT(10,6) NOT NULL, end_lat FLOAT(10,6) NOT NULL, end_lng FLOAT(10,6) NOT NULL, PRIMARY KEY (id))")
 
 # puts "Create table coordinates..."
 # results = client.query("DROP TABLE IF EXISTS coordinates")

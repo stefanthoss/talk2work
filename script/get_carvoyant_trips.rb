@@ -33,7 +33,7 @@ rest_call("/vehicle")["vehicle"].each do |car|
     else
       trips.each do |trip|
         unless trip["startWaypoint"].nil? || trip["endWaypoint"].nil? || trip["startWaypoint"]["latitude"].to_i == 0
-          client.query("INSERT INTO trips (id, start_lat, start_lng, end_lat, end_lng) VALUES (#{trip["id"]}, #{trip["startWaypoint"]["latitude"]}, #{trip["startWaypoint"]["longitude"]}, #{trip["endWaypoint"]["latitude"]}, #{trip["endWaypoint"]["longitude"]})")
+          client.query("INSERT INTO trips (id, car_id, start_lat, start_lng, end_lat, end_lng) VALUES (#{trip["id"]}, #{car["vehicleId"]}, #{trip["startWaypoint"]["latitude"]}, #{trip["startWaypoint"]["longitude"]}, #{trip["endWaypoint"]["latitude"]}, #{trip["endWaypoint"]["longitude"]})")
           puts "#{trip["startWaypoint"]["latitude"]},#{trip["startWaypoint"]["longitude"]} -> #{trip["endWaypoint"]["latitude"]},#{trip["endWaypoint"]["longitude"]}"
         end
       end

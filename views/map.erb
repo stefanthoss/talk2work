@@ -43,7 +43,7 @@
 
         /* load markers */
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', '/map_data.json', true);
+        xhr.open('GET', '/map_data.json<%= @car_id.nil? ? "" : "/#{@car_id}" %>', true);
         xhr.onload = function() {
           loadMarkers(JSON.parse(this.responseText));
         };

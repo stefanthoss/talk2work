@@ -51,12 +51,31 @@ class MyApplication < Sinatra::Base
     return rtnstr
   end
 
+  get '/map/:car_id' do
+    @car_id = params[:car_id]
+    erb :map
+  end
+
   get '/map' do
     erb :map
   end
 
   get '/img/ic_location.png' do
     send_file 'img/ic_location.png'
+  end
+
+  get '/map_data.json/:car_id' do
+    content_type :json
+
+    # open database connection
+    dbconfig = YAML::load(File.open('config/database.yml'))
+    client = Mysql2::Client.new(dbconfig)
+    
+    coords = []
+    client.query("SELECT * FROM trips WHERE car_id = #{params[:car_id]}").each(:symbolize_keys => true) do |trip|
+      coords << [trip[:end_lat], trip[:end_lng]]
+    end
+    coords.to_json
   end
 
   get '/map_data.json' do
@@ -70,7 +89,6 @@ class MyApplication < Sinatra::Base
     client.query("SELECT * FROM trips").each(:symbolize_keys => true) do |trip|
       coords << [trip[:end_lat], trip[:end_lng]]
     end
-
     coords.to_json
   end
 
