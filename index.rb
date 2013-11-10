@@ -81,10 +81,6 @@ class MyApplication < Sinatra::Base
     erb :map
   end
 
-  get '/img/ic_location.png' do
-    send_file 'img/ic_location.png'
-  end
-
   get '/map_data.json/:car_id' do
     content_type :json
     
@@ -100,7 +96,7 @@ class MyApplication < Sinatra::Base
     
     coords = []
     mysqlcon.query("SELECT * FROM trips").each(:symbolize_keys => true) do |trip|
-      coords << [trip[:end_lat], trip[:end_lng]]
+      coords << [trip[:end_lat], trip[:end_lng], "Election results"]
     end
     coords.to_json
   end
