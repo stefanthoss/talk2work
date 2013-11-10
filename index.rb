@@ -70,12 +70,17 @@ class MyApplication < Sinatra::Base
   end
 
   get '/match_data.json' do
-    @user = user(session[:userid])
-    @matches = []
+    user = user(session[:userid])
+    matches = []
     for matchid in matches_for(session[:userid])
-      @matches << user(matchid)
+      matches << user(matchid)
     end
-    @matches.to_json
+    matches.to_json
+  end
+
+  get '/commute_data.json' do
+    user = user(session[:userid])
+    { home: [user['lat'], user['lon']], work: [37.3859730,-121.9534680] }.to_json
   end
 
   get '/join' do
