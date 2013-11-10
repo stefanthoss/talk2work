@@ -1,3 +1,10 @@
+<div id="message" style="display:none; float: left; width: 100%; height: 50px; color: #34AAE7; background-color: #F4F4F4; font-size: 30px; padding: 10px 0px 7px 0px;">
+  <div style="padding-left: 7px;">
+    <span style="vertical-align: sub;"><img src="/img/ic_check.png"></span>
+    <span>Your route was created below. Have a nice trip!</span>
+  </div>
+</div>
+
 <div id="map-canvas" style="float: left; width: 100%; height: 600px;"></div>
 <div id="map-canvas2" style="float: left; width: 70%; height: 600px; display: none;"></div>
 <div id="map-overlay" style="width: 100%; height: 600px; background-color: rgba(255, 255, 255, 0.6); position: absolute; top: 0; left: 0;">
@@ -23,7 +30,11 @@
     </div>
 
     <div id="joindone" style="display: none;">
-      <div style="width: 65%; margin: 25px auto 0px auto;"><div style="float: left;"><img src="/img/ic_check.png" style="margin-right: 10px; vertical-align: middle;" /></div><div style="width: 75%; float: right;">WE WILL NOTIFY YOU ABOUT YOUR RIDE</div></div>
+      <div style="width: 65%; margin: 25px auto 0px auto;"><div style="float: left;">
+        <img src="/img/ic_check.png" style="margin-right: 10px; vertical-align: middle;" /></div>
+        <div style="width: 75%; float: right;">WE WILL SEND YOU A TEXT MESSAGE WHEN WE FOUND A RIDE.<br />
+        <a href="http://www.twilio.com/" style="text: decoration: none; display: inline-block; width: 166px; height: 0; overflow: hidden; padding-top: 31px; background: url(http://www.twilio.com/packages/company/img/logos_icon_poweredbysmall.png) no-repeat;">powered by twilio™</a></div>
+      </div>
     </div>
 
   </div>
@@ -42,6 +53,7 @@
 <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?sensor=false"></script>
 <script type="text/javascript">
   // semi global variables
+  var trip_unconfirmed = true;
   var directionsDisplay;
   var directionsService = new google.maps.DirectionsService();
   var map;
@@ -98,25 +110,37 @@
 
   // add a person to carpool
   $("#personcontainer").on("click", ".remove", function() {
-    var item = $(this).closest(".whole-person");
+    if(trip_unconfirmed) {
+      var item = $(this).closest(".whole-person");
 
-    /* remove waypoint from directions */
-    for(var i = 0; i < waypoints.length; i++) {
-      if(waypoints[i].location.nb == item.attr('data-lat')) {
-        waypoints.splice(i, 1);
+      /* remove waypoint from directions */
+      for(var i = 0; i < waypoints.length; i++) {
+        if(waypoints[i].location.nb == item.attr('data-lat')) {
+          waypoints.splice(i, 1);
+        }
       }
-    }
-    calculateRoute();
+      calculateRoute();
 
-    /* remove person from list */
-    item.slideUp("slow", function() {
-      $(this).remove();
-    });
+      /* remove person from list */
+      item.slideUp("slow", function() {
+        $(this).remove();
+      });
+    }
   });
 
   // confirm carpool
   $('#confirm-button').click(function() {
-    // TODO: do something!
+    if(trip_unconfirmed) {
+      trip_unconfirmed = false;
+      $("#message").slideDown("slow");
+      $(".remove").fadeOut();
+
+      /* grey out button */
+      $("#confirm-button").animate({
+        color: "#FFFFFF",
+        backgroundColor: "#C4C8CD"
+      });
+    }
   });
 
   // submit join form
@@ -159,16 +183,20 @@
           if($("#personcontainer").children('div[id="' + persons[i]["id"] + '"]').length > 0) {
             // value already exists in the list -> do nothing
           } else {
-            addToSidebarPerson(persons[i]);
-            waypoints.push({ location: new google.maps.LatLng(persons[i]["lat"], persons[i]["lon"]), stopover: false});
-            calculateRoute();
+            if(trip_unconfirmed) {
+              addToSidebarPerson(persons[i]);
+              waypoints.push({ location: new google.maps.LatLng(persons[i]["lat"], persons[i]["lon"]), stopover: false});
+              calculateRoute();
+            }
           }
         }
       })(marker, i));
       google.maps.event.addListener(marker, 'mouseover', (function(marker, i) {
         return function() {
-          infowindow.setContent(contentString);
-          infowindow.open(map, marker);
+          if(trip_unconfirmed) {
+            infowindow.setContent(contentString);
+            infowindow.open(map, marker);
+          }
         }
       })(marker, i));
       google.maps.event.addListener(marker, 'mouseout', (function(marker, i) {
@@ -279,8 +307,6 @@
     };
     map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
     directionsDisplay.setMap(map);
-
-    //calculateRoute(JSON.parse("<%= @route %>"));
   }
 
   function initializeGiveRide(callback) {
