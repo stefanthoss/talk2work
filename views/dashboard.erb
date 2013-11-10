@@ -1,4 +1,5 @@
 <div id="map-canvas" style="float: left; width: 100%; height: 600px;"></div>
+<div id="map-canvas2" style="float: left; width: 70%; height: 600px;"></div>
 <div id="map-overlay" style="width: 100%; height: 600px; background-color: rgba(255, 255, 255, 0.6); position: absolute; top: 0; left: 0;">
 
   <div id="mapoverlaycontainer_dashboard" style="margin: 10% auto; width: 60%; height: 258px;">
@@ -28,8 +29,28 @@
 
 </div>
 
+<div id="mapsidebar" style="float: right; width: 30%; background-color: #F4F4F4; height: 600px; display: none;">
+  <div style="padding: 20px;">
+    <p><b>Add a person to your commute by clicking on the map markers.</b></p>
+    <p style="font-style: bold;">People on your ride:</p>
+    <div id="personcontainer"></div><br />
+    <button id="confirm-button" type="button" style="width: 260px; height: 50px; margin: 0 auto; color: white; background-color: #9FC54D; border: none;">Confirm</button>
+  </div>
+</div>
+
 <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?sensor=false"></script>
 <script type="text/javascript">
+  // semi global variables
+  var directionsDisplay;
+  var directionsService = new google.maps.DirectionsService();
+  var map;
+  var marker_image;
+  var start;
+  var end;
+  var waypoints = [];
+  var bnds;
+
+  // join flow
   $('#joinoptionbtn').click(function() {
     $('#mapoverlaycontainer_dashboard').animate({
       opacity: 0, // directly hiding does not animate correctly
@@ -41,6 +62,57 @@
     }});
   });
 
+  // give flow
+  $('#giveoptionbtn').click(function() {
+    $('#mapoverlaycontainer_dashboard').animate({
+      opacity: 0, // directly hiding does not animate correctly
+    }, { duration: 500, complete: function() {
+      // hide the map overlay, first opacity, then hide for proper animation
+      $('#map-overlay').animate({
+        opacity: 0
+      }, { duration: 500, queue: false, complete: function() {
+        $('#map-overlay').hide();
+      }});
+      // reduce width of map
+      $('#map-canvas').animate({
+        width: '70%'
+      }, { duration: 500, queue: false, complete: function() {
+        // switch maps
+        initializeGiveRide(function () {
+          $('#map-canvas').hide();
+          $('#map-canvas2').show();
+          $('#mapsidebar').animate({
+            show: 'show'
+          }, { duration: 500, queue: false });
+          });
+      }});
+    }});
+  });
+
+  // add a person to carpool
+  $("#personcontainer").on("click", ".remove", function() {
+    var item = $(this).closest(".whole-person");
+
+    /* remove waypoint from directions */
+    for(var i = 0; i < waypoints.length; i++) {
+      if(waypoints[i].location.nb == item.attr('data-lat')) {
+        waypoints.splice(i, 1);
+      }
+    }
+    calculateRoute();
+
+    /* remove person from list */
+    item.slideUp("slow", function() {
+      $(this).remove();
+    });
+  });
+
+  // confirm carpool
+  $('#confirm-button').click(function() {
+    // TODO: do something!
+  });
+
+  // submit join form
   function formsubmit() {
     // first hide the current container
     $('#joinform').animate({
@@ -57,11 +129,136 @@
     }, { duration: 500, queue: false });
   }
 
-  var directionsDisplay;
-  var directionsService = new google.maps.DirectionsService();
-  var map;
+  function loadMarkers(persons) {
+    var infowindow = new google.maps.InfoWindow;
+    var marker, i;
 
-  function initialize() {
+    bnds = new google.maps.LatLngBounds();
+
+    for(i = 0; i < persons.length; i++){
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(persons[i]["lat"], persons[i]["lon"]),
+        map: map,
+        icon: marker_image
+      });
+
+      bnds.extend(new google.maps.LatLng(persons[i]["lat"], persons[i]["lon"]));
+
+      var contentString = '<div id="content"><div id="bodyContent">' +
+        '<p><b>Wants to talk about: </b>' + persons[i]["talkingpoint"] + '</p>' +
+        '</div></div>';
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          // add person to right sidebar
+          if($("#personcontainer").children('div[id="' + persons[i]["id"] + '"]').length > 0) {
+            // value already exists in the list -> do nothing
+          } else {
+            addToSidebarPerson(persons[i]);
+            waypoints.push({ location: new google.maps.LatLng(persons[i]["lat"], persons[i]["lon"]), stopover: false});
+            calculateRoute();
+          }
+        }
+      })(marker, i));
+      google.maps.event.addListener(marker, 'mouseover', (function(marker, i) {
+        return function() {
+          infowindow.setContent(contentString);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+      google.maps.event.addListener(marker, 'mouseout', (function(marker, i) {
+        return function() {
+          infowindow.close(map, marker);
+        }
+      })(marker, i));
+    }
+  }
+
+  function calculateRoute(callback) {
+    var request = {
+      origin: start,
+      destination: end,
+      waypoints: waypoints,
+      travelMode: google.maps.TravelMode.DRIVING,
+      optimizeWaypoints: true
+    };
+    directionsService.route(request, function(result, status) {
+      if (status == google.maps.DirectionsStatus.OK) {
+        directionsDisplay.setDirections(result);
+        if (callback)
+          callback();
+      }
+    });
+  }
+
+  function buildSidebarPersonDataContainer(name, image, value) {
+    var container = $("<div/>");
+    var dataimg = $("<img/>");
+    dataimg.attr('src', image);
+    dataimg.css('height', '12px');
+    dataimg.css('margin-right', '5px');
+    dataimg.css('vertical-align', 'middle');
+    container.append(dataimg);
+    var descname = $("<span/>");
+    descname.css('color', '#474747');
+    descname.html(name + ': ');
+    container.append(descname);
+    var descvalue = $("<span/>");
+    descvalue.html(value);
+    container.append(descvalue);
+    return container;
+  }
+
+  function buildSidebarPerson(person) {
+    var container = $("<div/>");
+    container.attr('id', person['id']);
+    container.attr('class', 'whole-person');
+    container.attr('data-lat', person['lat']);
+    container.css('display', 'none');
+    container.css('margin-bottom', '15px');
+    var profileimg = $("<div/>");
+    profileimg.css('float', 'left');
+    profileimg.css('margin-right', '10px');
+    var profileimgel = $("<img/>");
+    profileimgel.attr('src', '/img/profiles/' + person['id'] + '.png');
+    profileimg.append(profileimgel);
+    container.append(profileimg);
+    var profilename = $("<div/>");
+    profilename.css('float', 'left');
+    profilename.css('margin-top', '25px');
+    profilename.html(person['name'] + "&nbsp;&nbsp;<img style='vertical-align: middle;' src='img/ic_close.png' class='remove' />");
+    container.append(profilename);
+    var separator = $("<div/>");
+    separator.css('clear', 'both');
+    container.append(separator);
+
+    var datacontainer = $("<div/>");
+    datacontainer.css('color', '#8F8F8F');
+    datacontainer.css('margin-top', '7px');
+    datacontainer.css('font-size', '14px');
+    datacontainer.css('margin-left', '10px');
+    datacontainer.append(buildSidebarPersonDataContainer('Time', '/img/ic_clock.png', person['time']));
+    datacontainer.append(buildSidebarPersonDataContainer('Address', '/img/ic_user.png', person['address']));
+    datacontainer.append(buildSidebarPersonDataContainer('Topic', '/img/ic_chat.png', person['talkingpoint']));
+    container.append(datacontainer);
+
+    return container;
+  }
+
+  function addToSidebarPerson(person) {
+    var p = buildSidebarPerson(person);
+    $('#personcontainer').append(p);
+    p.slideDown("slow");
+  }
+
+  function updateSidebarPerson(persons) {
+    $('#personcontainer').empty();
+    for (var i = 0; i < persons.length; i++) {
+      addToSidebarPerson(persons[i]);
+    }
+  }
+
+  function initializeDashboard() {
     directionsDisplay = new google.maps.DirectionsRenderer();
     /* init map */
     var mapOptions = {
@@ -81,5 +278,49 @@
     //calculateRoute(JSON.parse("<%= @route %>"));
   }
 
-  google.maps.event.addDomListener(window, 'load', initialize);
+  function initializeGiveRide(callback) {
+    /* init map */
+    var mapOptions = {
+      center: new google.maps.LatLng(<%= @center[0] %>, <%= @center[1] %>),
+      zoom: 8,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    map = new google.maps.Map(document.getElementById("map-canvas2"), mapOptions);
+
+    marker_image = {
+      url: '/img/ic_location.png',
+      size: new google.maps.Size(30, 40),
+      scaledSize: new google.maps.Size(23, 30),
+      origin: new google.maps.Point(0, 0),
+      anchor: new google.maps.Point(0, 32)
+    };
+
+    /* load markers */
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/confirm_data.json', true);
+    xhr.onload = function() {
+      loadMarkers(JSON.parse(this.responseText));
+    };
+    xhr.send();
+
+    /* load commute route */
+    directionsDisplay = new google.maps.DirectionsRenderer();
+    directionsDisplay.setMap(map);
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/commute_data.json', true);
+    xhr.onload = function() {
+      route_data = JSON.parse(this.responseText)
+      start = new google.maps.LatLng(route_data["home"][0], route_data["home"][1]);
+      end = new google.maps.LatLng(route_data["work"][0], route_data["work"][1]);
+      calculateRoute(callback);
+
+      /* fit viewport to all given markers */
+      // bnds.extend(start);
+      // bnds.extend(end);
+      // map.fitBounds(bnds);
+    };
+    xhr.send();
+  }
+
+  google.maps.event.addDomListener(window, 'load', initializeDashboard);
 </script>

@@ -182,7 +182,7 @@
   }
 
   function addToSidebarPerson(person) {
-    p = buildSidebarPerson(person);
+    var p = buildSidebarPerson(person);
     $('#personcontainer').append(p);
     p.slideDown("slow");
   }
@@ -197,7 +197,7 @@
   /* load jQuery */
   $(function() {
     $("#personcontainer").on("click", ".remove", function() {
-      item = $(this).closest(".whole-person");
+      var item = $(this).closest(".whole-person");
 
       /* remove waypoint from directions */
       for(var i = 0; i < waypoints.length; i++) {
