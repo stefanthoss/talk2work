@@ -21,9 +21,7 @@
             strokeOpacity: 0.75
         };
         var googleVector = new GeoJSON(JSON.parse(geojson), googleOptions);
-        console.log(googleVector);
         for(var i = 0; i < googleVector.length; i++){
-          console.log(i);
           googleVector[i].setMap(map);
         }
       }
