@@ -62,7 +62,7 @@ class MyApplication < Sinatra::Base
   end
 
   get '/choice' do
-    "You have to choose, #{session[:username]}!<br /><a href=\"/matches\">Give</a><br /><a href=\"/join\">Join</a>"
+    erb :dashboard
   end
 
   get '/matches' do
@@ -129,14 +129,6 @@ class MyApplication < Sinatra::Base
       coords << [trip[:end_lat], trip[:end_lng], "Election results"]
     end
     coords.to_json
-  end
-
-  get '/directionsmap' do
-    erb :directionsmap
-  end
-
-  get '/directionsmap_data.json' do
-    [[37.420476,-122.141335], [37.332085,-122.030278], [37.36685,-122.236222]].to_json
   end
 
   private
