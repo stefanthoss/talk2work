@@ -10,15 +10,15 @@
       #everything { height: 100%; }
       #header { width: 100%; height: 70px; border-bottom: 5px solid #BCD581; }
     </style>
-    <script type="text/javascript" src="js/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="/js/jquery-2.0.3.min.js"></script>
     <link href='//fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
   </head>
   <body>
     <div id="everything">
       <div id="header">
-        <div style="float: left;"><img src="img/logo.png" style="height: 55px; margin: 5px;" /></div>
+        <div style="float: left;"><img src="/img/logo.png" style="height: 55px; margin: 5px;" /></div>
         <div style="float: right; width: 30%; background-color: #B7D47F; height: 100%;">
-          <img src="img/profiles/<%= current_user['id'] %>.png" style="height: 100%; margin: 5px; vertical-align: middle;" />
+          <img src="/img/profiles/<%= current_user['id'] %>.png" style="height: 100%; margin: 5px; vertical-align: middle;" />
           <span style="color: white;">Welcome, <%= current_user['name'] %></span>
         </div>
       </div>
