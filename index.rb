@@ -7,8 +7,15 @@ require 'json'
 
 require_relative 'config/yammer'
 
+module Helpers
+  def current_user
+    mysqlcon.query("SELECT * FROM users WHERE id = #{session[:userid]}").first
+  end
+end
+
 class MyApplication < Sinatra::Base
   use Rack::Session::Cookie, :secret => 'eeVoowungahngaone3an4ohViitu6iex'
+  helpers Helpers
 
   get '/?' do
     if ENV['RACK_ENV'] == 'production'
@@ -74,6 +81,7 @@ class MyApplication < Sinatra::Base
 
   get '/confirm' do
     @user = user(session[:userid])
+    erb :confirmation
   end
 
   get '/map/:car_id' do
