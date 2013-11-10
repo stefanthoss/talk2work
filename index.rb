@@ -17,6 +17,10 @@ class MyApplication < Sinatra::Base
   use Rack::Session::Cookie, :secret => 'eeVoowungahngaone3an4ohViitu6iex'
   helpers Helpers
 
+  before do
+    @center = [37.783333, -122.416667]
+  end
+
   get '/?' do
     if ENV['RACK_ENV'] == 'production'
       # do the real thing in production
