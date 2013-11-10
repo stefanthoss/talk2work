@@ -8,21 +8,30 @@ require 'json'
 require_relative 'config/yammer'
 
 class MyApplication < Sinatra::Base
+  use Rack::Session::Cookie, :secret => 'eeVoowungahngaone3an4ohViitu6iex'
+
+  def mysqlcon
+    # open database connection
+    dbconfig = YAML::load(File.open('config/database.yml'))
+    client = Mysql2::Client.new(dbconfig)
+  end
 
   get '/?' do
     if ENV['RACK_ENV'] == 'production'
+      # do the real thing in production
       loginurl = "https://www.yammer.com/dialog/oauth?client_id=#{YAMMER_CLIENT_ID}&redirect_uri=#{YAMMER_REDIRECT_URI}"
     else
+      # fake login in development
       loginurl = "/auth/yammer/callback"
     end
     "Hello World! <a href=\"#{loginurl}\">Login</a>"
   end
 
   get '/auth/yammer/callback' do
+    # get oauth token from yammer
     if ENV['RACK_ENV'] == 'production'
+      # do the real thing in production
       auth_code = params[:code]
-      #url = "https://www.yammer.com/oauth2/access_token.json?client_id=#{YAMMER_CLIENT_ID}"
-      #token_reponse = RestClient.post(url, code: auth_code)
       url = "https://www.yammer.com/oauth2/access_token.json?client_id=#{YAMMER_CLIENT_ID}&client_secret=#{YAMMER_CLIENT_SECRET}&code=#{auth_code}"
       token_reponse = RestClient.get(url)
       if token_reponse.code != 200
@@ -31,24 +40,36 @@ class MyApplication < Sinatra::Base
       oauth_token = JSON.parse(token_reponse.body)['access_token']['token']
       puts "authtoken: #{oauth_token}"
     else
+      # just use hardcoded dev token for development, will expire sometime
       oauth_token = YAMMER_DEV_TOKEN
     end
 
+    # get information about user
     Yammer.configure do |c|
       c.client_id = YAMMER_CLIENT_ID
       c.client_secret = YAMMER_CLIENT_SECRET
     end
     yc = Yammer::Client.new(:access_token => oauth_token)
-
-    network_users = yc.all_users.body
-    rtnstr = "Your network #{network_users[0][:network_name]}:<br /><ul>"
-    for i in 0..10
-      for user in yc.all_users(page: i).body
-        rtnstr += "<li>#{user[:id]}: #{user[:full_name]}</li>"
-      end
+    current_user = yc.current_user.body
+    if mysqlcon.query("SELECT COUNT(*) AS cnt FROM users WHERE id = #{current_user[:id]}").first['cnt'] != 1
+      halt 500, "Could not find user with id #{current_user[:id]}"
     end
-    rtnstr += "</ul>"
-    return rtnstr
+    # save user info in session
+    session[:userid] = current_user[:id]
+    session[:username] = current_user[:full_name]
+    redirect to('/choice')
+  end
+
+  get '/choice' do
+    "You have to choose, #{session[:username]}!<br /><a href=\"/matches\">Give</a><br /><a href=\"/join\">Join</a>"
+  end
+
+  get '/matches' do
+    "You have no matches, #{session[:username]}!"
+  end
+
+  get '/join' do
+    "We will notify you, #{session[:username]}!"
   end
 
   get '/map/:car_id' do
@@ -66,13 +87,9 @@ class MyApplication < Sinatra::Base
 
   get '/map_data.json/:car_id' do
     content_type :json
-
-    # open database connection
-    dbconfig = YAML::load(File.open('config/database.yml'))
-    client = Mysql2::Client.new(dbconfig)
     
     coords = []
-    client.query("SELECT * FROM trips WHERE car_id = #{params[:car_id]}").each(:symbolize_keys => true) do |trip|
+    mysqlcon.query("SELECT * FROM trips WHERE car_id = #{params[:car_id]}").each(:symbolize_keys => true) do |trip|
       coords << [trip[:end_lat], trip[:end_lng]]
     end
     coords.to_json
@@ -80,13 +97,9 @@ class MyApplication < Sinatra::Base
 
   get '/map_data.json' do
     content_type :json
-
-    # open database connection
-    dbconfig = YAML::load(File.open('config/database.yml'))
-    client = Mysql2::Client.new(dbconfig)
     
     coords = []
-    client.query("SELECT * FROM trips").each(:symbolize_keys => true) do |trip|
+    mysqlcon.query("SELECT * FROM trips").each(:symbolize_keys => true) do |trip|
       coords << [trip[:end_lat], trip[:end_lng]]
     end
     coords.to_json

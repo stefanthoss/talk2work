@@ -5,7 +5,7 @@ dbconfig = YAML::load(File.open('config/database.yml'))
 client = Mysql2::Client.new(dbconfig)
 
 yammerids = [
-  10104969,
+  1508111935,
   1489269123,
   1487902075,
   6587423,
