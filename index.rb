@@ -10,12 +10,6 @@ require_relative 'config/yammer'
 class MyApplication < Sinatra::Base
   use Rack::Session::Cookie, :secret => 'eeVoowungahngaone3an4ohViitu6iex'
 
-  def mysqlcon
-    # open database connection
-    dbconfig = YAML::load(File.open('config/database.yml'))
-    client = Mysql2::Client.new(dbconfig)
-  end
-
   get '/?' do
     if ENV['RACK_ENV'] == 'production'
       # do the real thing in production
@@ -65,6 +59,11 @@ class MyApplication < Sinatra::Base
   end
 
   get '/matches' do
+    matchids = matches_for(session[:userid])
+    @matches = []
+    for matchid in matchids
+      @matches << user(matchid)
+    end
     "You have no matches, #{session[:username]}!"
   end
 
@@ -112,4 +111,21 @@ class MyApplication < Sinatra::Base
   get '/directionsmap_data.json' do
     [[37.419476,-122.140335], [37.332085,-122.030278], [37.38685,-122.036222]].to_json
   end
+
+  private
+    def mysqlcon
+      # open database connection
+      dbconfig = YAML::load(File.open('config/database.yml'))
+      client = Mysql2::Client.new(dbconfig)
+    end
+
+    def user(id)
+      mysql.query("SELECT * FROM user WHERE id = #{id}").first
+    end
+
+    def matches_for(id)
+      [ 1508111935, 1489269123, 9847577, 1495442374, ].reject do |e|
+        e == id
+      end
+    end
 end

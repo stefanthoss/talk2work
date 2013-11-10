@@ -7,14 +7,14 @@ client = Mysql2::Client.new(dbconfig)
 yammerids = [
   1508111935,
   1489269123,
-  1487902075,
-  6587423,
+  9847577,
+  1495442374,
 ]
 usernames = [
   'Tobias Jones',
-  'John Doe',
-  'Michael Fynch',
-  'Jane Miller',
+  'Adam Wooley',
+  'Gregory Love',
+  'Neil McCarthy',
 ]
 latitudes = [
   37.454965,
