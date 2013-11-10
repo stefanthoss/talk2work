@@ -86,8 +86,10 @@ class MyApplication < Sinatra::Base
     @user = user(session[:userid])
     @chosen = []
     @route = []
-    for matchid in matches_for(session[:userid])
+    times = ['8:30 am', '8:45 am', '9:00 am', '9:15 am']
+    matches_for(session[:userid]).each_with_index do |matchid, index| 
       userdata = user(matchid)
+      userdata['time'] = times[index]
       @chosen << userdata
       @route << [userdata['lat'], userdata['lon']]
     end

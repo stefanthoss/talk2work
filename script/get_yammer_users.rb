@@ -12,7 +12,7 @@ yammerids = [
 ]
 usernames = [
   'Tobias Jones',
-  'Adam Wooley',
+  'Jessica Johnson',
   'Gregory Love',
   'Neil McCarthy',
 ]
@@ -36,7 +36,7 @@ addresses = [
 ]
 talkingpoints = [
   'last nights HIMYM',
-  'super secret company project',
+  'secret company project',
   'bitch about boss',
   'Obamacare',
 ]
