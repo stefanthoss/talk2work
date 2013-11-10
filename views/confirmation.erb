@@ -10,18 +10,7 @@
 <div style="float: right; width: 30%; background-color: #F4F4F4; height: 600px;">
   <div style="padding: 20px;">
     <p style="font-style: bold;">People on your ride:</p>
-    <% for person in @chosen %>
-    <div style="margin-bottom: 15px;">
-      <div style="float: left; margin-right: 10px;"><img src="/img/profiles/<%= person['id'] %>.png" /></div>
-      <div style="float: left; margin-top: 25px;"><%= person['name'] %></div>
-      <div style="clear: both;"></div>
-      <div style="margin-top: 7px; margin-left: 10px; color: #8F8F8F; font-size: 14px;">
-        <div><img src="/img/ic_clock.png" style="height: 12px; margin-right: 5px; vertical-align: middle;" /><span style="color: #474747;">Time:</span> <%= person['time'] %></div>
-        <div><img src="/img/ic_user.png" style="height: 12px; margin-right: 5px; vertical-align: middle;" /><span style="color: #474747;">Address:</span> <%= person['address'] %></div>
-        <div><img src="/img/ic_chat.png" style="height: 12px; margin-right: 5px; vertical-align: middle;" /><span style="color: #474747;">Topic:</span> <%= person['talkingpoint'] %></div>
-      </div>
-    </div>
-    <% end %>
+    <div id="personcontainer"></div>
   </div>
 </div>
 
@@ -30,6 +19,67 @@
   var directionsDisplay;
   var directionsService = new google.maps.DirectionsService();
   var map;
+
+  function buildSidebarPersonDataContainer(name, image, value) {
+    var container = $("<div/>");
+    var dataimg = $("<img/>");
+    dataimg.attr('src', image);
+    dataimg.css('height', '12px');
+    dataimg.css('margin-right', '5px');
+    dataimg.css('vertical-align', 'middle');
+    container.append(dataimg);
+    var descname = $("<span/>");
+    descname.css('color', '#474747');
+    descname.html(name + ': ');
+    container.append(descname);
+    var descvalue = $("<span/>");
+    descvalue.html(value);
+    container.append(descvalue);
+    return container;
+  }
+
+  function buildSidebarPerson(person) {
+    var container = $("<div/>");
+    container.css('margin-bottom', '15px');
+    var profileimg = $("<div/>");
+    profileimg.css('float', 'left');
+    profileimg.css('margin-right', '10px');
+    var profileimgel = $("<img/>");
+    profileimgel.attr('src', '/img/profiles/' + person['id'] + '.png');
+    profileimg.append(profileimgel);
+    container.append(profileimg);
+    var profilename = $("<div/>");
+    profilename.css('float', 'left');
+    profilename.css('margin-top', '25px');
+    profilename.html(person['name']);
+    container.append(profilename);
+    var separator = $("<div/>");
+    separator.css('clear', 'both');
+    container.append(separator);
+
+    var datacontainer = $("<div/>");
+    datacontainer.css('color', '#8F8F8F');
+    datacontainer.css('margin-top', '7px');
+    datacontainer.css('font-size', '14px');
+    datacontainer.css('margin-left', '10px');
+    datacontainer.append(buildSidebarPersonDataContainer('Time', '/img/ic_clock.png', person['time']));
+    datacontainer.append(buildSidebarPersonDataContainer('Address', '/img/ic_user.png', person['address']));
+    datacontainer.append(buildSidebarPersonDataContainer('Topic', '/img/ic_chat.png', person['talkingpoint']));
+    container.append(datacontainer);
+
+    return container;
+  }
+
+  function addToSidebarPerson(person) {
+    $('#personcontainer').append(buildSidebarPerson(person));
+  }
+
+  function updateSidebarPerson(persons) {
+    $('#personcontainer').empty();
+    for (var i = 0; i < persons.length; i++) {
+      addToSidebarPerson(persons[i]);
+    }
+  }
 
   function calculateRoute(route) {
     var nowaypoints = route.length;
@@ -65,7 +115,8 @@
     map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
     directionsDisplay.setMap(map);
 
-    calculateRoute(JSON.parse("<%= @route %>"));
+    updateSidebarPerson(JSON.parse('<%= @chosen %>'));
+    calculateRoute(JSON.parse('<%= @route %>'));
   }
 
   google.maps.event.addDomListener(window, 'load', initialize);
