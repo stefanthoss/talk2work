@@ -14,6 +14,8 @@
         margin-left: auto;
         margin-right: auto;
       }
+      #footer { width: 812px; background-color: rgba(255, 255, 255, 0.4); border-radius: 5px; padding: 0 10px; margin: 100px auto 0 auto; }
+      .powered-logo { clear: both; height: 25px; vertical-align: middle; margin: 10px; }
     </style>
   </head>
 
@@ -28,6 +30,15 @@
       <div style="text-align:center; margin-top: 5%;">
         <a href="<%= @loginurl %>"><img src="img/img_btn.png" style="width: 180px;" alt="Login"></a>
       </div>
+    </div>
+
+    <div id="footer">
+      <span style="font-size: 75%;">&copy;&nbsp;2013 TALK2WORK | Powered by:</span>
+      <img src="img/launch-logo.png" alt="Launch Hackathon" class="powered-logo" />
+      <img src="img/carvoyant-logo.png" alt="Carvoyant" class="powered-logo" />
+      <img src="img/yammer-logo.png" alt="Yammer" class="powered-logo" />
+      <img src="img/digital-ocean-logo.png" alt="Digital Ocean" class="powered-logo" />
+      <img src="img/twilio-logo.png" alt="Twilio" class="powered-logo" />
     </div>
 </body>
 </html>
