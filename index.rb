@@ -19,6 +19,7 @@ class MyApplication < Sinatra::Base
 
   before do
     @center = [37.783333, -122.416667]
+    @scheduledate = ('Tomorrow, ' + (Date.today + 1).strftime("%B %d")).upcase
   end
 
   get '/?' do
