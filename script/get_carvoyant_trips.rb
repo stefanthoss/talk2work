@@ -17,14 +17,18 @@ dbconfig = YAML::load(File.open('config/database.yml'))
 client = Mysql2::Client.new(dbconfig)
 
 rest_call("/vehicle")["vehicle"].each do |car|
+  fuel_rates = []
+
   puts "\n=== #{car["vehicleId"]}: #{car["name"]} ==="
   client.query("INSERT INTO cars (id, car_name) VALUES (#{car["vehicleId"]}, '#{car["name"]}')")
 
   more_trips = true
   i = 0
+  offset = 1000
   while more_trips
-    trips = rest_call("/vehicle/#{car["vehicleId"]}/trip?searchLimit=100&searchOffset=#{i}")["trip"]
-    if trips.empty?
+    trips = rest_call("/vehicle/#{car["vehicleId"]}/trip?searchLimit=#{offset}&searchOffset=#{i}")["trip"]
+    fuel_rate_data = rest_call("/vehicle/#{car["vehicleId"]}/data?key=GEN_FUELRATE&searchLimit=#{offset}&searchOffset=#{i}")["data"]
+    if trips.empty? && fuel_rate_data.empty?
       more_trips = false
     else
       trips.each do |trip|
@@ -33,7 +37,13 @@ rest_call("/vehicle")["vehicle"].each do |car|
           puts "#{trip["startWaypoint"]["latitude"]},#{trip["startWaypoint"]["longitude"]} -> #{trip["endWaypoint"]["latitude"]},#{trip["endWaypoint"]["longitude"]}"
         end
       end
+      fuel_rate_data.each { |r| fuel_rates << r["value"] }
     end
-    i = i + 100
+    i = i + offset
   end
+
+  puts fuel_rates.inspect
+  avg_fuel_rate = fuel_rates.inject{ |sum, el| sum + el }.to_f / fuel_rates.size
+  puts "Average fuel rate: #{avg_fuel_rate} gph"
+  client.query("UPDATE cars SET avg_fuel_rate = #{avg_fuel_rate}")
 end

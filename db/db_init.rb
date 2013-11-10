@@ -8,7 +8,7 @@ client = Mysql2::Client.new(dbconfig)
 
 puts "Create table cars..."
 results = client.query("DROP TABLE IF EXISTS cars")
-results = client.query("CREATE TABLE cars (id INT NOT NULL, user_id INT, car_name VARCHAR(255), PRIMARY KEY (id))")
+results = client.query("CREATE TABLE cars (id INT NOT NULL, user_id INT, car_name VARCHAR(255), avg_fuel_rate FLOAT, PRIMARY KEY (id))")
 
 puts "Create table trips..."
 results = client.query("DROP TABLE IF EXISTS trips")
