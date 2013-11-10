@@ -65,7 +65,7 @@ class MyApplication < Sinatra::Base
     for matchid in matchids
       @matches << user(matchid)
     end
-    "You have no matches, #{session[:username]}!"
+    erb :matches
   end
 
   get '/join' do
