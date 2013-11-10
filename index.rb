@@ -70,11 +70,18 @@ class MyApplication < Sinatra::Base
   end
 
   get '/match_data.json' do
-    @matches = []
+    user = user(session[:userid])
+    matches = []
     for matchid in matches_for(session[:userid])
-      @matches << user(matchid)
+      matches << user(matchid)
     end
-    @matches.to_json
+#    matches.to_json
+    '[{"id":1489269123,"name":"Adam Wooley","lat":37.434964,"lon":-122.15399,"address":"address 2","yammeroauth":null,"talkingpoint":"super secret company project","rewards":0},{"id":9847577,"name":"Gregory Love","lat":37.434964,"lon":-122.17399,"address":"address 3","yammeroauth":null,"talkingpoint":"bitch about boss","rewards":0},{"id":1495442374,"name":"Neil McCarthy","lat":37.424964,"lon":-122.16399,"address":"address 4","yammeroauth":null,"talkingpoint":"Obamacare","rewards":0}]'
+  end
+
+  get '/commute_data.json' do
+    user = user(session[:userid])
+    { home: [user['lat'], user['lon']], work: [37.3859730,-121.9534680] }.to_json
   end
 
   get '/join' do
