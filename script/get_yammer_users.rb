@@ -35,14 +35,14 @@ addresses = [
   '12117 Moorpark Street, Los Angeles, CA, USA',
 ]
 talkingpoints = [
-  'last nights HIMYM',
-  'secret company project',
-  'bitch about boss',
+  'Gravity movie',
+  'LAUNCH Hackathon',
+  'Yesterday\'s 49ers Game',
   'Obamacare',
 ]
 
 usernames.each_with_index do |name, i|
-  client.query("INSERT INTO users (id, name, lat, lon, address, talkingpoint) VALUES (#{yammerids[i]}, '#{usernames[i]}', #{latitudes[i]}, #{longitudes[i]}, '#{addresses[i]}', '#{talkingpoints[i]}')")
+  client.query("INSERT INTO users (id, name, lat, lon, address, talkingpoint) VALUES (#{yammerids[i]}, '#{usernames[i]}', #{latitudes[i]}, #{longitudes[i]}, '#{addresses[i]}', '#{client.escape(talkingpoints[i])}')")
 end
 
 
