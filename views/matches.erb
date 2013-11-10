@@ -6,7 +6,7 @@
     <p style="color: #34AAE7;">People already joining your ride:</p>
     <ul id="rider_list">
     </ul><br />
-    <p><a href="/confirm">Confirm this ride share</a></p>
+    <p style="position: absolute; bottom: 0;"><a href="/confirm">Confirm this ride share</a></p>
   </div>
 </div>
 
@@ -36,7 +36,8 @@
           if ( $("#rider_list li:contains('" + coords[i]["name"] + "')").length ) {
             // value already exists in the list -> do nothing
           } else {
-            $("#rider_list").append("<li>" + coords[i]["name"] + " <a href='#' class='remove-li'>[x]</a></li>");
+            $("#rider_list").append("<li><b>" + coords[i]["name"] + "</b> <a href='#' class='remove-li'>[x]</a><br />" +
+              "Wants to talk about " + coords[i]['talkingpoint'] + "</li>");
           }
         }
       })(marker, i));
