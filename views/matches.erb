@@ -1,73 +1,91 @@
 
-<div id="map-canvas" style="float: left; width: 70%; height: 600px;">
-</div>
-<div style="float: right; width: 30%; background-color: #F4F4F4; height: 600px;">
+<div id="map-canvas" style="float: left; width: 70%; height: 700px;"></div>
+<div style="float: right; width: 30%; background-color: #F4F4F4; height: 700px;">
   <div style="padding: 20px;">
     <p><b>Add a person to your ride by clicking on the map markers.</b></p><br />
-    <p>People already joining your ride:</p>
-    <ul>
-      <li>John Doe</li>
-      <li>Jane Miller</li>
-    </ul>
+    <p style="color: #34AAE7;">People already joining your ride:</p>
+    <ul id="rider_list">
+    </ul><br />
+    <p><a href="/confirm">Confirm this ride share</a></p>
   </div>
 </div>
 
-  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false">
-    </script>
-    <script type="text/javascript">
-      var map;
-      var marker_image;
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript">
+  var map;
+  var marker_image;
 
-      function loadMarkers(coords) {
-        var infowindow = new google.maps.InfoWindow;
-        var marker, i;
+  function loadMarkers(coords) {
+    var infowindow = new google.maps.InfoWindow;
+    var marker, i;
 
-        for(i = 0; i < coords.length; i++){
-          marker = new google.maps.Marker({
-            position: new google.maps.LatLng(coords[i][0], coords[i][1]),
-            map: map,
-            icon: marker_image
-          });
-            
-          var contentString = '<div id="content"><div id="bodyContent">' +
-            '<p><b>Wants to talk about: </b>' + coords[i][2] + '</p>' +
-            '<p><img src="img/ic_user.jpg" /><a href="#">Add this Person</a></p>'+
-            '</div></div>';
+    for(i = 0; i < coords.length; i++){
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(coords[i]["lat"], coords[i]["lon"]),
+        map: map,
+        icon: marker_image
+      });
+        
+      var contentString = '<div id="content"><div id="bodyContent">' +
+        '<p><b>Wants to talk about: </b>' + coords[i]["talkingpoint"] + '</p>' +
+        '</div></div>';
 
-          google.maps.event.addListener(marker, 'click', (function(marker, i) {
-            return function() {
-              infowindow.setContent(contentString);
-              infowindow.open(map, marker);
-            }
-          })(marker, i));
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          // add person to right sidebar
+          if ( $("#rider_list li:contains('" + coords[i]["name"] + "')").length ) {
+            // value already exists in the list -> do nothing
+          } else {
+            $("#rider_list").append("<li>" + coords[i]["name"] + " <a href='#' class='remove-li'>[x]</a></li>");
+          }
         }
-      }
+      })(marker, i));
+      google.maps.event.addListener(marker, 'mouseover', (function(marker, i) {
+        return function() {
+          infowindow.setContent(contentString);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+      google.maps.event.addListener(marker, 'mouseout', (function(marker, i) {
+        return function() {
+          infowindow.close(map, marker);
+        }
+      })(marker, i));
+    }
+  }
 
-      function initialize() {
-        /* init map */
-        var mapOptions = {
-          center: new google.maps.LatLng(37.783333, -122.416667),
-          zoom: 8,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+  function initialize() {
+    /* init map */
+    var mapOptions = {
+      center: new google.maps.LatLng(37.783333, -122.416667),
+      zoom: 8,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 
-        marker_image = {
-          url: '/img/ic_location.png',
-          size: new google.maps.Size(30, 40),
-          scaledSize: new google.maps.Size(23, 30),
-          origin: new google.maps.Point(0, 0),
-          anchor: new google.maps.Point(0, 32)
-        };
+    marker_image = {
+      url: '/img/ic_location.png',
+      size: new google.maps.Size(30, 40),
+      scaledSize: new google.maps.Size(23, 30),
+      origin: new google.maps.Point(0, 0),
+      anchor: new google.maps.Point(0, 32)
+    };
 
-        /* load markers */
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', '/map_data.json<%= @car_id.nil? ? "" : "/#{@car_id}" %>', true);
-        xhr.onload = function() {
-          loadMarkers(JSON.parse(this.responseText));
-        };
-        xhr.send();
-      }
+    /* load markers */
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/match_data.json', true);
+    xhr.onload = function() {
+      loadMarkers(JSON.parse(this.responseText));
+    };
+    xhr.send();
+  }
 
-      google.maps.event.addDomListener(window, 'load', initialize);
-    </script>
+  /* load jQuery */
+  $(function() {
+    $("#rider_list").on("click", ".remove-li", function() {
+      $(this).closest("li").remove();
+    });
+});
+
+  google.maps.event.addDomListener(window, 'load', initialize);
+</script>

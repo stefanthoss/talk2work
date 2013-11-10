@@ -66,12 +66,16 @@ class MyApplication < Sinatra::Base
   end
 
   get '/matches' do
+    erb :matches
+  end
+
+  get '/match_data.json' do
     @user = user(session[:userid])
     @matches = []
     for matchid in matches_for(session[:userid])
       @matches << user(matchid)
     end
-    erb :matches
+    @matches.to_json
   end
 
   get '/join' do
@@ -124,7 +128,7 @@ class MyApplication < Sinatra::Base
   end
 
   get '/directionsmap_data.json' do
-    [[37.419476,-122.140335], [37.332085,-122.030278], [37.38685,-122.036222]].to_json
+    [[37.420476,-122.141335], [37.332085,-122.030278], [37.36685,-122.236222]].to_json
   end
 
   private
