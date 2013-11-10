@@ -1,6 +1,6 @@
 
 <div id="map-canvas" style="float: left; width: 70%; height: 700px;"></div>
-<div style="float: right; width: 30%; background-color: #F4F4F4; height: 700px;">
+<div style="float: right; width: 30%; background-color: #F4F4F4; height: 700px;" id="right-container">
   <div style="padding: 20px;">
     <p><b>Add a person to your commute by clicking on the map markers.</b></p><br />
     <p style="color: #34AAE7; font-weight: bold;">People joining your ride:</p>
@@ -129,6 +129,67 @@
     xhr.send();
   }
 
+  function buildSidebarPersonDataContainer(name, image, value) {
+    var container = $("<div/>");
+    var dataimg = $("<img/>");
+    dataimg.attr('src', image);
+    dataimg.css('height', '12px');
+    dataimg.css('margin-right', '5px');
+    dataimg.css('vertical-align', 'middle');
+    container.append(dataimg);
+    var descname = $("<span/>");
+    descname.css('color', '#474747');
+    descname.html(name + ': ');
+    container.append(descname);
+    var descvalue = $("<span/>");
+    descvalue.html(value);
+    container.append(descvalue);
+    return container;
+  }
+
+  function buildSidebarPerson(person) {
+    var container = $("<div/>");
+    container.css('margin-bottom', '15px');
+    var profileimg = $("<div/>");
+    profileimg.css('float', 'left');
+    profileimg.css('margin-right', '10px');
+    var profileimgel = $("<img/>");
+    profileimgel.attr('src', '/img/profiles/' + person['id'] + '.png');
+    profileimg.append(profileimgel);
+    container.append(profileimg);
+    var profilename = $("<div/>");
+    profilename.css('float', 'left');
+    profilename.css('margin-top', '25px');
+    profilename.html(person['name']);
+    container.append(profilename);
+    var separator = $("<div/>");
+    separator.css('clear', 'both');
+    container.append(separator);
+
+    var datacontainer = $("<div/>");
+    datacontainer.css('color', '#8F8F8F');
+    datacontainer.css('margin-top', '7px');
+    datacontainer.css('font-size', '14px');
+    datacontainer.css('margin-left', '10px');
+    datacontainer.append(buildSidebarPersonDataContainer('Time', '/img/ic_clock.png', person['time']));
+    datacontainer.append(buildSidebarPersonDataContainer('Address', '/img/ic_user.png', person['address']));
+    datacontainer.append(buildSidebarPersonDataContainer('Topic', '/img/ic_chat.png', person['talkingpoint']));
+    container.append(datacontainer);
+
+    return container;
+  }
+
+  function addToSidebarPerson(person) {
+    $('#personcontainer').append(buildSidebarPerson(person));
+  }
+
+  function updateSidebarPerson(persons) {
+    $('#personcontainer').empty();
+    for (var i = 0; i < persons.length; i++) {
+      addToSidebarPerson(persons[i]);
+    }
+  }
+
   /* load jQuery */
   $(function() {
     $("#rider_list").on("click", ".remove-li", function() {
@@ -147,7 +208,23 @@
     });
 
     $('#confirm-button').click(function() {
-      window.location = "/confirm";
+      /* replace container */
+      $("#right-container").fadeOut( "slow", function() {
+        $("#right-container").html('<div style="padding: 20px;">'+
+          '<p style="color: #34AAE7; font-weight: bold;">People on your ride:</p>'+
+          '<div id="personcontainer"></div>'+
+          '</div>');
+
+        /* add persons to sidebar */
+        $('#personcontainer').empty();
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/confirm_data.json', true);
+        xhr.onload = function() {
+          updateSidebarPerson(JSON.parse(this.responseText));
+          $("#right-container").fadeIn();
+        };
+        xhr.send();
+      });
     });
 });
 

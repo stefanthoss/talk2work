@@ -102,6 +102,19 @@ class MyApplication < Sinatra::Base
     erb :confirmation
   end
 
+  get '/confirm_data.json' do
+    chosen = []
+    route = []
+    times = ['8:30 am', '8:45 am', '9:00 am', '9:15 am']
+    matches_for(session[:userid]).each_with_index do |matchid, index| 
+      userdata = user(matchid)
+      userdata['time'] = times[index]
+      chosen << userdata
+      route << [userdata['lat'], userdata['lon']]
+    end
+    chosen.to_json
+  end
+
   get '/map/:car_id' do
     @car_id = params[:car_id]
     erb :map
