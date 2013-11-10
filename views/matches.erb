@@ -19,6 +19,8 @@
   var end;
   var waypoints = [];
 
+  var bnds;
+
   var directionsDisplay;
   var directionsService = new google.maps.DirectionsService();
 
@@ -26,12 +28,16 @@
     var infowindow = new google.maps.InfoWindow;
     var marker, i;
 
+    bnds = new google.maps.LatLngBounds();
+
     for(i = 0; i < coords.length; i++){
       marker = new google.maps.Marker({
         position: new google.maps.LatLng(coords[i]["lat"], coords[i]["lon"]),
         map: map,
         icon: marker_image
       });
+
+      bnds.extend(new google.maps.LatLng(coords[i]["lat"], coords[i]["lon"]));
       
       var contentString = '<div id="content"><div id="bodyContent">' +
         '<p><b>Wants to talk about: </b>' + coords[i]["talkingpoint"] + '</p>' +
@@ -43,7 +49,7 @@
           if ( $("#rider_list li:contains('" + coords[i]["name"] + "')").length ) {
             // value already exists in the list -> do nothing
           } else {
-            $("#rider_list").append("<li><b>" + coords[i]["name"] + "</b> <a href='#' class='remove-li'>[x]</a><br />" +
+            $("#rider_list").append("<li data-lat='" + coords[i]["lat"] + "' data-lng='" + coords[i]["lon"] + "'><b>" + coords[i]["name"] + "</b> <a href='#' class='remove-li'>[x]</a><br />" +
               "Wants to talk about " + coords[i]['talkingpoint'] + "</li>");
             waypoints.push({ location: new google.maps.LatLng(coords[i]["lat"], coords[i]["lon"]), stopover: false});
             calculateRoute();
@@ -114,6 +120,11 @@
       start = new google.maps.LatLng(route_data["home"][0], route_data["home"][1]);
       end = new google.maps.LatLng(route_data["work"][0], route_data["work"][1]);
       calculateRoute();
+
+      /* fit viewport to all given markers */
+      // bnds.extend(start);
+      // bnds.extend(end);
+      // map.fitBounds(bnds);
     };
     xhr.send();
   }
@@ -121,7 +132,18 @@
   /* load jQuery */
   $(function() {
     $("#rider_list").on("click", ".remove-li", function() {
-      $(this).closest("li").remove();
+      item = $(this).closest("li");
+
+      /* remove waypoint from directions */
+      for(var i = 0; i < waypoints.length; i++) {
+        if(waypoints[i].location.nb == item.attr('data-lat')) {
+          waypoints.splice(i, 1);
+        }
+      }
+      calculateRoute();
+
+      /* remove person from list */
+      item.remove();
     });
 
     $('#confirm-button').click(function() {
