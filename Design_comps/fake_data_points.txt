@@ -1,0 +1,5 @@
+home 1:		34.046241,-118.529704		830 Radcliffe Avenue, Los Angeles, CA, USA
+home 2:		34.082264,-118.434829		134 N Beverly Glen Blvd, Los Angeles, CA, USA
+home 3:		34.135234,-118.413425		3499 Coldwater Canyon Avenue, Los Angeles, CA, USA
+home 4:		34.150490,-118.397160		12117 Moorpark Street, Los Angeles, CA, USA
+work:		34.239089,-118.372419		11121 Pendleton Street, Los Angeles, CA, USA
