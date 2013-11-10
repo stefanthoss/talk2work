@@ -16,6 +16,10 @@
   var map;
   var marker_image;
 
+  var start;
+  var end;
+  var waypoints = [];
+
   var directionsDisplay;
   var directionsService = new google.maps.DirectionsService();
 
@@ -42,6 +46,8 @@
           } else {
             $("#rider_list").append("<li><b>" + coords[i]["name"] + "</b> <a href='#' class='remove-li'>[x]</a><br />" +
               "Wants to talk about " + coords[i]['talkingpoint'] + "</li>");
+            waypoints.push({ location: new google.maps.LatLng(coords[i]["lat"], coords[i]["lon"]), stopover: false});
+            calculateRoute();
           }
         }
       })(marker, i));
@@ -59,14 +65,11 @@
     }
   }
 
-  function calculateRoute(route) {
-    var nowaypoints = route.length;
-    var start = new google.maps.LatLng(route["home"][0], route["home"][1]);
-    var end = new google.maps.LatLng(route["work"][0], route["work"][1]);
-
+  function calculateRoute() {
     var request = {
       origin: start,
       destination: end,
+      waypoints: waypoints,
       travelMode: google.maps.TravelMode.DRIVING,
       optimizeWaypoints: true
     };
@@ -108,7 +111,10 @@
     var xhr = new XMLHttpRequest();
     xhr.open('GET', '/commute_data.json', true);
     xhr.onload = function() {
-      calculateRoute(JSON.parse(this.responseText));
+      route_data = JSON.parse(this.responseText)
+      start = new google.maps.LatLng(route_data["home"][0], route_data["home"][1]);
+      end = new google.maps.LatLng(route_data["work"][0], route_data["work"][1]);
+      calculateRoute();
     };
     xhr.send();
   }
