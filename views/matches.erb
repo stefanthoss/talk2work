@@ -4,9 +4,7 @@
   <div style="padding: 20px;">
     <p><b>Add a person to your ride by clicking on the map markers.</b></p><br />
     <p style="color: #34AAE7;">People already joining your ride:</p>
-    <ul>
-      <li>John Doe</li>
-      <li>Jane Miller</li>
+    <ul id="rider_list">
     </ul><br />
     <p><a href="/confirm">Confirm this ride share</a></p>
   </div>
@@ -30,13 +28,27 @@
         
       var contentString = '<div id="content"><div id="bodyContent">' +
         '<p><b>Wants to talk about: </b>' + coords[i]["talkingpoint"] + '</p>' +
-        '<p><img src="img/ic_user.jpg" /><a href="#">Add this Person</a></p>'+
         '</div></div>';
 
       google.maps.event.addListener(marker, 'click', (function(marker, i) {
         return function() {
+          // add person to right sidebar
+          if ( $("#rider_list li:contains('" + coords[i]["name"] + "')").length ) {
+            // value already exists in the list -> do nothing
+          } else {
+            $("#rider_list").append("<li>" + coords[i]["name"] + " <a href='#' class='remove-li'>[x]</a></li>");
+          }
+        }
+      })(marker, i));
+      google.maps.event.addListener(marker, 'mouseover', (function(marker, i) {
+        return function() {
           infowindow.setContent(contentString);
           infowindow.open(map, marker);
+        }
+      })(marker, i));
+      google.maps.event.addListener(marker, 'mouseout', (function(marker, i) {
+        return function() {
+          infowindow.close(map, marker);
         }
       })(marker, i));
     }
@@ -67,6 +79,13 @@
     };
     xhr.send();
   }
+
+  /* load jQuery */
+  $(function() {
+    $("#rider_list").on("click", ".remove-li", function() {
+      $(this).closest("li").remove();
+    });
+});
 
   google.maps.event.addDomListener(window, 'load', initialize);
 </script>
