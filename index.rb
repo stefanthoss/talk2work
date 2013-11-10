@@ -67,9 +67,8 @@ class MyApplication < Sinatra::Base
 
   get '/matches' do
     @user = user(session[:userid])
-    matchids = matches_for(session[:userid])
     @matches = []
-    for matchid in matchids
+    for matchid in matches_for(session[:userid])
       @matches << user(matchid)
     end
     erb :matches
@@ -81,6 +80,13 @@ class MyApplication < Sinatra::Base
 
   get '/confirm' do
     @user = user(session[:userid])
+    @chosen = []
+    @route = []
+    for matchid in matches_for(session[:userid])
+      userdata = user(matchid)
+      @chosen << userdata
+      @route << [userdata['lat'], userdata['lon']]
+    end
     erb :confirmation
   end
 
