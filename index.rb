@@ -117,7 +117,7 @@ class MyApplication < Sinatra::Base
     end
 
     def user(id)
-      mysql.query("SELECT * FROM user WHERE id = #{id}").first
+      mysqlcon.query("SELECT * FROM users WHERE id = #{id}").first
     end
 
     def matches_for(id)
