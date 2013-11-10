@@ -98,6 +98,7 @@ class MyApplication < Sinatra::Base
       @chosen << userdata
       @route << [userdata['lat'], userdata['lon']]
     end
+    @chosen = @chosen.to_json
     erb :confirmation
   end
 
