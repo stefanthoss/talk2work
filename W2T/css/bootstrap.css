@@ -112,7 +112,7 @@ img {
   max-width: none;
 }
 
-
+button,
 input,
 select,
 textarea {
@@ -121,7 +121,7 @@ textarea {
   vertical-align: middle;
 }
 
-
+button,
 input {
   *overflow: visible;
   line-height: normal;
@@ -133,7 +133,7 @@ input::-moz-focus-inner {
   border: 0;
 }
 
-
+button,
 html input[type="button"],
 input[type="reset"],
 input[type="submit"] {
@@ -143,7 +143,7 @@ input[type="submit"] {
 
 label,
 select,
-
+button,
 input[type="button"],
 input[type="reset"],
 input[type="submit"],
