@@ -55,8 +55,8 @@ class MyApplication < Sinatra::Base
     erb :map
   end
 
-  get '/js/GeoJSON.js' do
-    send_file 'js/GeoJSON.js'
+  get '/img/ic_location.png' do
+    send_file 'img/ic_location.png'
   end
 
   get '/map_data.json' do
@@ -68,10 +68,10 @@ class MyApplication < Sinatra::Base
     
     coords = []
     client.query("SELECT * FROM trips").each(:symbolize_keys => true) do |trip|
-      coords << [trip[:end_lng], trip[:end_lat]]
+      coords << [trip[:end_lat], trip[:end_lng]]
     end
 
-    JSON.generate({ type: "MultiPoint", coordinates: coords })
+    coords.to_json
   end
 
   get '/directionsmap' do

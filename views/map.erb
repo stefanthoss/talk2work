@@ -9,20 +9,18 @@
     </style>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false">
     </script>
-    <script type="text/javascript" src="/js/GeoJSON.js">
-    </script>
     <script type="text/javascript">
       var map;
 
-      function loadMarkers(geojson) {
-        var googleOptions = {
-            strokeColor: "#FFFF00",
-            strokeWeight: 7,
-            strokeOpacity: 0.75
-        };
-        var googleVector = new GeoJSON(JSON.parse(geojson), googleOptions);
-        for(var i = 0; i < googleVector.length; i++){
-          googleVector[i].setMap(map);
+      var marker_image;
+
+      function loadMarkers(coords) {
+        for(var i = 0; i < coords.length; i++){
+          var marker = new google.maps.Marker({
+            position: new google.maps.LatLng(coords[i][0], coords[i][1]),
+            map: map,
+            icon: marker_image
+          });
         }
       }
 
@@ -35,11 +33,19 @@
         };
         map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 
+        marker_image = {
+          url: '/img/ic_location.png',
+          size: new google.maps.Size(30, 40),
+          scaledSize: new google.maps.Size(23, 30),
+          origin: new google.maps.Point(0, 0),
+          anchor: new google.maps.Point(0, 32)
+        };
+
         /* load markers */
         var xhr = new XMLHttpRequest();
         xhr.open('GET', '/map_data.json', true);
         xhr.onload = function() {
-          loadMarkers(this.responseText);
+          loadMarkers(JSON.parse(this.responseText));
         };
         xhr.send();
       }
