@@ -59,6 +59,7 @@ class MyApplication < Sinatra::Base
   end
 
   get '/matches' do
+    @user = user(session[:userid])
     matchids = matches_for(session[:userid])
     @matches = []
     for matchid in matchids
