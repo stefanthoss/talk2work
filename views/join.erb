@@ -1,0 +1,58 @@
+<div id="map-canvas" style="float: left; width: 100%; height: 600px;"></div>
+<div id="map-overlay" style="width: 100%; height: 600px; background-color: rgba(255, 255, 255, 0.6); position: absolute; top: 0; left: 0;">
+  <div style="background-color: white; margin: 10% auto; width: 40%; height: 400px; border-top: 10px solid #34AAE7;">
+    <div style="width: 65%; margin: 25px auto 0px auto;"><img src="/img/ic_pencil.png" style="margin-right: 10px; vertical-align: middle;" /> COMPLETE THE RIDE FORM</div>
+    <div style="width: 70%; margin: 25px auto 0px auto; text-align: center;">
+      <form>
+        <input type="text" name="talkingpoint" placeholder="Your talking interests" style="width: 100%; line-height: 28px; font-size: 18px; margin: 0px; padding: 5px;" />
+        <input type="submit" value="Find a ride!" style="color: #FFFFFF; font-size: 18px; line-height: 28px; background-color: #9FC54D; border: 0; width: 100%; height: 36px; margin: 20px 5px 0 5px;" />
+      </form>
+    </div>
+  </div
+</div>
+
+<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript">
+  var directionsDisplay;
+  var directionsService = new google.maps.DirectionsService();
+  var map;
+
+  function calculateRoute(route) {
+    var nowaypoints = route.length;
+    var start = new google.maps.LatLng(route[0][0], route[0][1]);
+    var end = new google.maps.LatLng(route[nowaypoints - 1][0], route[nowaypoints - 1][1]);
+    var waypoints = [];
+    for (var i = 1; i < nowaypoints - 1; i++) {
+      waypoints.push({ location: new google.maps.LatLng(route[i][0], route[i][1]), stopover: false});
+    }
+
+    var request = {
+      origin: start,
+      destination: end,
+      waypoints: waypoints,
+      travelMode: google.maps.TravelMode.DRIVING,
+      optimizeWaypoints: true
+    };
+    directionsService.route(request, function(result, status) {
+      if (status == google.maps.DirectionsStatus.OK) {
+        directionsDisplay.setDirections(result);
+      }
+    });
+  }
+
+  function initialize() {
+    directionsDisplay = new google.maps.DirectionsRenderer();
+    /* init map */
+    var mapOptions = {
+      center: new google.maps.LatLng(37.783333, -122.416667),
+      zoom: 8,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+    directionsDisplay.setMap(map);
+
+    //calculateRoute(JSON.parse("<%= @route %>"));
+  }
+
+  google.maps.event.addDomListener(window, 'load', initialize);
+</script>

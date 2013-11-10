@@ -70,7 +70,6 @@ class MyApplication < Sinatra::Base
   end
 
   get '/match_data.json' do
-    @user = user(session[:userid])
     @matches = []
     for matchid in matches_for(session[:userid])
       @matches << user(matchid)
@@ -79,11 +78,10 @@ class MyApplication < Sinatra::Base
   end
 
   get '/join' do
-    "We will notify you, #{session[:username]}!"
+    erb :join
   end
 
   get '/confirm' do
-    @user = user(session[:userid])
     @chosen = []
     @route = []
     times = ['8:30 am', '8:45 am', '9:00 am', '9:15 am']
