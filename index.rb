@@ -13,12 +13,12 @@ class MyApplication < Sinatra::Base
   get '/?' do
     if ENV['RACK_ENV'] == 'production'
       # do the real thing in production
-      loginurl = "https://www.yammer.com/dialog/oauth?client_id=#{YAMMER_CLIENT_ID}&redirect_uri=#{YAMMER_REDIRECT_URI}"
+      @loginurl = "https://www.yammer.com/dialog/oauth?client_id=#{YAMMER_CLIENT_ID}&redirect_uri=#{YAMMER_REDIRECT_URI}"
     else
       # fake login in development
-      loginurl = "/auth/yammer/callback"
+      @loginurl = "/auth/yammer/callback"
     end
-    "Hello World! <a href=\"#{loginurl}\">Login</a>"
+    erb :login
   end
 
   get '/auth/yammer/callback' do
@@ -70,6 +70,10 @@ class MyApplication < Sinatra::Base
 
   get '/join' do
     "We will notify you, #{session[:username]}!"
+  end
+
+  get '/confirm' do
+    @user = user(session[:userid])
   end
 
   get '/map/:car_id' do
