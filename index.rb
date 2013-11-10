@@ -5,10 +5,7 @@ require 'mysql2'
 require 'yaml'
 require 'json'
 
-YAMMER_CLIENT_ID = 'wN7Tyzyeo5eXxXe7MP9U2g'
-YAMMER_CLIENT_SECRET = 'Fk0njVHhYH59TdaXEVOW69yHl8NIbIdohNgTK75w'
-YAMMER_REDIRECT_URI = 'http://192.241.233.188/auth/yammer/callback'
-YAMMER_DEV_TOKEN = 'iQhCMcDgfSw7Dk9qKPuUAQ'
+require_relative 'config/yammer'
 
 class MyApplication < Sinatra::Base
 
@@ -24,8 +21,10 @@ class MyApplication < Sinatra::Base
   get '/auth/yammer/callback' do
     if ENV['RACK_ENV'] == 'production'
       auth_code = params[:code]
-      url = "https://www.yammer.com/oauth2/access_token.json?client_id=#{YAMMER_CLIENT_ID}"
-      token_reponse = RestClient.post(url, code: auth_code)
+      #url = "https://www.yammer.com/oauth2/access_token.json?client_id=#{YAMMER_CLIENT_ID}"
+      #token_reponse = RestClient.post(url, code: auth_code)
+      url = "https://www.yammer.com/oauth2/access_token.json?client_id=#{YAMMER_CLIENT_ID}&client_secret=#{YAMMER_CLIENT_SECRET}&code=#{auth_code}"
+      token_reponse = RestClient.get(url)
       if token_reponse.code != 200
         halt 500, "Invalid response code while authenticating: #{token_reponse.code}"
       end
@@ -45,7 +44,7 @@ class MyApplication < Sinatra::Base
     rtnstr = "Your network #{network_users[0][:network_name]}:<br /><ul>"
     for i in 0..10
       for user in yc.all_users(page: i).body
-        rtnstr += "<li>#{user[:full_name]}</li>"
+        rtnstr += "<li>#{user[:id]}: #{user[:full_name]}</li>"
       end
     end
     rtnstr += "</ul>"

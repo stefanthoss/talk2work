@@ -17,3 +17,6 @@ results = client.query("CREATE TABLE trips (id INT NOT NULL, start_lat FLOAT(10,
 # puts "Create table coordinates..."
 # results = client.query("DROP TABLE IF EXISTS coordinates")
 # results = client.query("CREATE TABLE coordinates (id INT NOT NULL AUTO_INCREMENT, lat FLOAT(10,6) NOT NULL, lng FLOAT(10,6) NOT NULL, PRIMARY KEY (id))")
+puts "Create table users..."
+results = client.query("DROP TABLE IF EXISTS users")
+results = client.query("CREATE TABLE users (id INT NOT NULL, name VARCHAR(100) NOT NULL, lat FLOAT(10,6) NOT NULL, lon FLOAT(10,6) NOT NULL, address VARCHAR(255) NOT NULL, yammeroauth VARCHAR(22) NULL DEFAULT NULL, talkingpoint VARCHAR(255) NULL, rewards INT NOT NULL DEFAULT 0, PRIMARY KEY (id))")
