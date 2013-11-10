@@ -73,4 +73,12 @@ class MyApplication < Sinatra::Base
 
     JSON.generate({ type: "MultiPoint", coordinates: coords })
   end
+
+  get '/directionsmap' do
+    erb :directionsmap
+  end
+
+  get '/directionsmap_data.json' do
+    [[37.419476,-122.140335], [37.332085,-122.030278], [37.38685,-122.036222]].to_json
+  end
 end
