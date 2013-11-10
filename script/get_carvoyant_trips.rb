@@ -45,6 +45,6 @@ rest_call("/vehicle")["vehicle"].each do |car|
   unless fuel_rates.empty?
     avg_fuel_rate = fuel_rates.inject{ |sum, el| sum + el }.to_f / fuel_rates.size
     puts "Average fuel rate: #{avg_fuel_rate} gph"
-    client.query("UPDATE cars SET avg_fuel_rate = #{avg_fuel_rate} WHERE id = #{car["vehicleId"]")
+    client.query("UPDATE cars SET avg_fuel_rate = #{avg_fuel_rate} WHERE id = #{car["vehicleId"]}")
   end
 end
