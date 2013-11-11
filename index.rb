@@ -122,11 +122,11 @@ class MyApplication < Sinatra::Base
 
   get '/map/:car_id' do
     @car_id = params[:car_id]
-    erb :map
+    erb :map, layout: nil
   end
 
   get '/map' do
-    erb :map
+    erb :map, layout: nil
   end
 
   get '/map_data.json/:car_id' do
