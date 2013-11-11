@@ -113,6 +113,7 @@
   var end;
   var waypoints = [];
   var bnds;
+  var markers = [];
 
   // join flow
   $('#joinoptionbtn').click(function() {
@@ -230,9 +231,9 @@
 
       bnds.extend(new google.maps.LatLng(persons[i]["lat"], persons[i]["lon"]));
 
-      var contentString = '<div id="content"><div id="bodyContent">' +
-        '<p><b>Wants to talk about: </b>' + persons[i]["talkingpoint"] + '</p>' +
-        '</div></div>';
+      markers.push('<div id="content"><div id="bodyContent">' +
+                  '<p><b>Wants to talk about: </b>' + persons[i]["talkingpoint"] + '</p>' +
+                  '</div></div>');
 
       google.maps.event.addListener(marker, 'click', (function(marker, i) {
         return function() {
@@ -251,7 +252,7 @@
       google.maps.event.addListener(marker, 'mouseover', (function(marker, i) {
         return function() {
           if(trip_unconfirmed) {
-            infowindow.setContent(contentString);
+            infowindow.setContent(markers[i]);
             infowindow.open(map, marker);
           }
         }
