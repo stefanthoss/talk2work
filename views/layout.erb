@@ -22,9 +22,9 @@
     <div id="everything">
       <div id="header">
         <div style="float: left;"><a href="/choice" title="talk2work Dashboard"><img src="img/logo.png" alt="talk2work Logo" style="height: 55px; margin: 5px;" /></a></div>
-        <div style="float: right; width: 30%; background-color: #B7D47F; height: 100%;">
+        <div style="float: right; width: 30%; background-color: #B7D47F; height: 100%; position:relative;">
           <img src="img/profiles/<%= current_user['id'] %>.png" style="height: 100%; margin: 2px 7px 2px 7px; vertical-align: middle;" />
-          <span style="color: white; font-weight: bold;">Welcome, <%= current_user['name'] %></span>
+          <span style="color: white; font-weight: bold; position: absolute; top: 20%; left: 40%;">Welcome,<br /><%= current_user['name'] %></span>
         </div>
       </div>
       <div style="clear: both;"></div>
