@@ -26,6 +26,33 @@
         background-repeat: no-repeat;
         background-attachment: fixed;
         text-align: center;
+        overflow: hidden;
+      }
+
+      .slide > .txt {
+        padding: 25px 0px;
+        font-size: 52px;
+      }
+
+      .slide > .img {
+        height: 100%;
+        width: 100%;
+        min-height: 100%;
+        min-width: 100%;
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        text-align: center;
+      }
+
+      .bggreen {
+        background-color: #5C7884;
+        color: #FFFFFF;
+      }
+
+      .bgblue {
+        background-color: #00ADEF;
+        color: #FFFFFF;
       }
     </style>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -37,17 +64,29 @@
       <div style="margin-top: 10px;">Share more than a workplace</div>
     </div>
     
-    <div class="slide" data-speed="4" style="background-image: url(traffic2.jpg);">
-      <div style="text-align: left; padding-top: 50px; margin-left: 350px; font-size: 52px;">Everyday traffic to work</div>
+    <div class="slide" data-speed="4">
+      <div class="txt bggreen">Everyday traffic to work</div>
+      <div class="img" style="background-image: url(traffic.jpg);"></div>
     </div>
 
-    <div class="slide" data-speed="8" style="background-image: url(parking2.jpg);">
+    <div class="slide" data-speed="4">
+      <div class="txt bgblue">No parking spaces</div>
+      <div class="img" style="background-image: url(parking.jpg);"></div>
+    </div>
+
+    <div class="slide" data-speed="4">
+      <div class="txt bggreen">Dummy</div>
+      <div class="img" style="background-image: url(cubicle.jpg);"></div>
+    </div>
+
+    <div class="slide" data-speed="8" style="background-image: url(la.jpg);">
       <img src="../lg_talk2work/lg_t2w_color.png" style="margin-top: 10%;" />
       <div style="margin-top: 10px;">Share more than a workplace</div>
     </div>
 
     <script type="text/javascript">
-      $(document).ready(function(){
+      // from http://net.tutsplus.com/tutorials/html-css-techniques/simple-parallax-scrolling-technique/
+      /*$(document).ready(function() {
         // Cache the Window object
         $window = $(window);
                       
@@ -68,7 +107,7 @@
           
           }); // window scroll Ends
         });
-      });
+      });*/
     </script>
 
   </body>
