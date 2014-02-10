@@ -18,6 +18,23 @@
         background-repeat: no-repeat;
         overflow: hidden;
       }
+      .title {
+      	text-align: center;
+      	padding: 25px;
+      	font-size: 60px;
+      }
+      .left_col {
+      	text-align: right;
+      	font-size: 40px;
+      }
+      .right_col {
+      	text-align: left;
+      	font-size: 40px;
+      }
+      td {
+      	line-height: 250%;
+        font-weight: normal;
+      }
     </style>
   </head>
   <body>
@@ -63,9 +80,32 @@
       <div style="float: left;  width: 49%; height: 49%; background-image: url(img/traffic.jpg); background-repeat: no-repeat; background-position: left bottom; background-size: cover; position: relative;"><div style="position: absolute; left: 50px; bottom: 170px; font-size: 28px;">Commute time is lost time</div></div>
       <div style="float: right; width: 49%; height: 49%; background-image: url(img/parking.jpg); background-repeat: no-repeat; background-position: right bottom; background-size: cover; position: relative;"><div style="position: absolute; left: 50px; bottom: 50px;">Costs for parking infrastructure</div></div>
     </div>
-    <div id="slide3" class="slide" style="background-image: url(images/4.jpg);">
-      <span>Slide 3</span>
+
+    <div id="slide3" class="slide" style="background-image: url(images/4.jpg); width: 1400px;">
+      <div class="title">Benefits</div>
+      <div style="height: 500px;">
+        <table style="border: none; width: 100%; margin: 50px;">
+          <tr>
+            <td class="left_col">Secure carpool</td>
+            <td rowspan="4" style="text-align: center; width: 50px;">|</td>
+            <td class="right_col">Less parking structure costs</td>
+          </tr>
+          <tr>
+            <td class="left_col">Get to know co-workers</td>
+            <td class="right_col">Team building</td>
+          </tr>
+          <tr>
+            <td class="left_col">Faster commute</td>
+            <td class="right_col">More productive time</td>
+          </tr>
+          <tr>
+            <td class="left_col">Engaging experience</td>
+            <td class="right_col">Greener company image</td>
+          </tr>
+        </table>
+      </div>
     </div>
+
     <div class="slide" style="background-image: url(images/5.jpg);">
       <span>Slide 4</span>
     </div>
