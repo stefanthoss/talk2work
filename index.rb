@@ -22,6 +22,14 @@ class MyApplication < Sinatra::Base
     @scheduledate = ('Tomorrow, ' + (Date.today + 1).strftime("%B %d")).upcase
   end
 
+  get '/presentation/?' do
+    send_file 'presentation2/index.html'
+  end
+
+  get '/presentation/img/:file' do
+    send_file "presentation2/img/#{params[:file]}"
+  end
+
   get '/?' do
     if ENV['RACK_ENV'] == 'production'
       # do the real thing in production
