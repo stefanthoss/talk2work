@@ -1,0 +1,26 @@
+average income: $44,321 / 15 $/h
+average carpool: 2.2 pers
+parking spot: $4,000
+220 g CO2 / mil
+average commute: 18 mil
+average time savings: 18 min
+
+
+                                        small /     medium /      large
+employees:                              2,500 /      5,000 /     10,000
+
+parking spots before carpooling:        1,250 /      2,500 /      5,000
+parking spots after carpooling:           900 /      1,600 /      3,300
+number of carpools:                       350 /        900 /      1,700   (with 2.2 people)
+hours of daily time savings:              231 /        594 /      1,122
+parking spots costs:                1,400,000 /  3,600,000 /  6,800,000   (parking spot is built for 10 years)
+daily kg CO2 savings:                    7.56 /      19.44 /      36.72
+yearly tons C02 savings:                  304 /        782 /       1477
+
+daily parking spot savings:               384 /        986 /      1,863
+yearly parking spot savings:          140,000 /    360,000 /    680,000
+daily income savings:                   3,465 /      8,910 /     16,830   (based on hours of daily time savings)
+
+savings per quarter:                  351,221 /    903,010 /  1,705,736
+savings per year:                   1,404,885 /  3,612,040 /  6,822,945
+savings per 5 year:                 7,024,425 / 18,060,200 / 34,114,725
