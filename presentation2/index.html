@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <!-- Stylesheet for chart-->
-    <!--<link rel="stylesheet" href="demos.css" type="text/css" media="screen" />-->
     
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     
@@ -17,61 +15,53 @@
         font-weight: 200;
       }
       .slide {
-        height: 100%;
+        height: 800px;
         width: 100%;
         background-repeat: no-repeat;
         overflow: hidden;
       }
       .title {
-      	text-align: center;
-      	padding: 40px;
-      	font-size: 60px;
+        text-align: center;
+        padding: 40px;
+        font-size: 60px;
       }
       .left_col {
-      	text-align: right;
+        text-align: right;
         padding-right: 70px;
-      	font-size: 33px;
+        font-size: 33px;
       }
       .right_col {
-      	text-align: left;
+        text-align: left;
         padding-left: 70px;
-      	font-size: 33px;
+        font-size: 33px;
       }
       td {
-      	line-height: 250%;
+        line-height: 250%;
         font-weight: normal;
       }
       .matrix_top {
-      	  padding-left: 50px;
+          padding-left: 50px;
         text-align: left;
-      	font-size:18px;
-      	line-height: 38px;
+        font-size:18px;
+        line-height: 38px;
         font-weight: 200;
-      	/*border-bottom: 1px solid white;*/
+        /*border-bottom: 1px solid white;*/
       }
       .matrix_left {
-      	text-align: right;
+        text-align: right;
         font-weight: 200;
-      	font-size: 18px;
+        font-size: 18px;
       }
       .matrix_middle {
         padding-left: 50px;
-      	text-align: left;
-      	font-size: 28px;
+        text-align: left;
+        font-size: 28px;
       }
       .bottom {
         background-color: #111;
         height: 20px;
       }
     </style>
-    
-    <script src="libraries/RGraph.common.core.js" ></script>
-    <script src="libraries/RGraph.common.dynamic.js" ></script>
-    <script src="libraries/RGraph.common.tooltips.js" ></script>
-    <script src="libraries/RGraph.common.effects.js" ></script>
-    <script src="libraries/RGraph.line.js" ></script>
-    <script src="libraries/jquery.min.js" ></script>
-    <!--[if lt IE 9]><script src="xcanvas/excanvas.js"></script><![endif]-->
 
   </head>
   <body>
@@ -110,6 +100,7 @@
         </div>
       </div>
     </div>
+
     <div id="slide2" class="slide" style="background-color: rgb(175, 175, 175); position: relative;">
       <div style="position: absolute; top: 0; left: 0; width: 50%; height: 49%; color: #00B3EC; font-size: 48px; font-weight: 200; text-align: center; background-color: #FFFFFF;"><div style="margin-top: 20%;">Everyday challenges</div></div>
       <div id="traffic" style="position: absolute; top: 0; right: 0; width: 49%; height: 49%; background-image: url(img/office.jpg); background-repeat: no-repeat; background-position: right top; background-size: cover;"><div style="position: absolute; left: 30px; bottom: 30px; font-size: 35px; font-weight: 500;">No cross collaboration</div></div>
@@ -117,21 +108,15 @@
       <div style="position: absolute; bottom: 0; right: 0; width: 49%; height: 49%; background-image: url(img/parking.jpg); background-repeat: no-repeat; background-position: right bottom; background-size: cover;"><div style="position: absolute; left: 30px; top: 30px; font-size: 35px;font-weight: 500;">High costs for parking infrastructure</div></div>
     </div>
     
-    <div id="slide3_1" class="slide" style="background-color: rgb(175, 175, 175); background-size: cover; width: 100%;">
-      <div id="title" style="font-family: Open Sans Light; color: #8B8878; padding-top: 15px;">
-	<h1><center>Decline or Incline</center></h1></div>
-     <div style="background-image: url(img/carpool.jpg); height: 100%;">
- 
+    <div id="slide3" class="slide" style="background-color: rgb(55, 55, 55); width: 100%;">
+      <div id="title" style="font-family: Open Sans Light; color: white; padding-top: 15px;">
+       <h1><center>Carpooling potential</center></h1>
+      </div>
+      <div style="background-image: url(img/carpool.jpg); background-size: contain; background-repeat: no-repeat; height: 100%;"></div>
+    </div>
+  
 
-    </div>
-    </div>
-    <div id="centered" class="centered" style="position: relative; top: 0%; right: 70%; left: 10%; bottom: 0;">
-   
-    </div>
-    </div>
-	
-
-<div class="slide">
+    <div id="slide4" class="slide">
       <div style="width: 100%; height: 55%; background-image: url(img/bkg1.png); text-align: center;">
         <div style="padding-top: 10%;"><img src="img/logo_white.png" /></div>
         <div style="color: white; font-size: 28px;">Share more than a workplace</div>
@@ -152,7 +137,7 @@
       </div>
     </div>
 
-    <div id="slide3" class="slide" style="background-image: url(img/bkg_benefits.jpg); background-size: cover; width: 100%;">
+    <div id="slide3" class="slide" style="background-image: url(img/bkg_benefits.jpg); background-size: contain; width: 100%;">
       <div class="title">Benefits</div>
       <div style="height: 500px;">
         <table style="border: none; width: 100%; margin: 50px;">
@@ -210,14 +195,14 @@
       </div>
     </div>
 
-    <div class="slide">
+    <div id="slide5" class="slide">
       <div style="width: 100%; height: 25%; background-color: #373737; text-align: center;">
         <div style="color: white; font-size: 45px; padding-top: 5%;">PERSONAS</div>
       </div>
       <div style="width: 100%; height: 75%; background-image: url(img/persona_slide.jpg); background-size: cover;"></div>
     </div>
     
-    <div class="slide">
+    <div id="slide6" class="slide">
       <div style="width: 100%; height: 25%; text-align: center; position: relative; background-color: #373737">
         <div style="padding-top: 5%; font-size: 35px;">Reach us at team@talk2work.com</div>
         <div style="position: absolute; bottom: 0; width: 100%; color: black;"></div>
@@ -230,7 +215,7 @@
 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.11.3/TweenMax.min.js"></script>
-    <script type="text/javascript" src="jquery.superscrollorama.js"></script>
+    <!--<script type="text/javascript" src="jquery.superscrollorama.js"></script>-->
     <script type="text/javascript">
       /*
 

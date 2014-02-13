@@ -22,7 +22,11 @@ class MyApplication < Sinatra::Base
     @scheduledate = ('Tomorrow, ' + (Date.today + 1).strftime("%B %d")).upcase
   end
 
-  get '/presentation/?' do
+  get '/presentation' do
+    redirect to('/presentation/')
+  end
+
+  get '/presentation/' do
     send_file 'presentation2/index.html'
   end
 
