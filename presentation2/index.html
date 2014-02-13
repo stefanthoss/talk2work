@@ -42,18 +42,26 @@
         font-weight: normal;
       }
       .matrix_top {
-      	text-align: center;
-      	font-size: 33px;
+      	  padding-left: 50px;
+        text-align: left;
+      	font-size:18px;
       	line-height: 38px;
-      	border-bottom: 1px solid white;
+        font-weight: 200;
+      	/*border-bottom: 1px solid white;*/
       }
       .matrix_left {
       	text-align: right;
-      	font-size: 28px;
+        font-weight: 200;
+      	font-size: 18px;
       }
       .matrix_middle {
-      	text-align: center;
+        padding-left: 50px;
+      	text-align: left;
       	font-size: 28px;
+      }
+      .bottom {
+        background-color: #111;
+        height: 20px;
       }
     </style>
     
@@ -173,15 +181,15 @@
       </div>
     </div>
 
-    <div id="slide4" class="slide" style="background-image: url(img/traffic.jpg); background-size: cover; width: 100%;">
+    <div id="slide4" class="slide" style="background-image: url(img/traffic_bkg.jpg); background-size: cover; width: 100%;">
       <div class="title">Savings per year</div>
       <div style="height: 500px;">
-        <table style="border: none; width: 100%; margin: 50px 30px 10px 0px;">
+        <table style="border: 0px; width: 100%; margin: 40px 20px 10px 0px;">
           <tr>
             <td class="matrix_top"></td>
-            <td class="matrix_top">Small company<br />2500 employees</td>
-            <td class="matrix_top">Medium company<br />5000 employees</td>
-            <td class="matrix_top">Large company<br />10000 employees</td>
+            <td class="matrix_top">SMALL COMPANY<br /><font style="font-size: 18px; color:#ccc;">2500 employees</font></td>
+            <td class="matrix_top">MEDIUM COMPANY<br /><font style="font-size: 18px; color:#ccc;">5000 employees</font></td>
+            <td class="matrix_top">LARGE COMPANY<br /><font style="font-size: 18px; color:#ccc;">10000 employees</font></td>
           </tr>
           <tr>
             <td class="matrix_left">Parking spot cost</td>
@@ -233,9 +241,9 @@
       </div>
     </div>
     <div class="slide">
-      <div style="width: 100%; height: 30%; text-align: center; position: relative;">
-        <div style="padding-top: 5%;"><img src="img/logo.png" /></div>
-        <div style="position: absolute; bottom: 0; width: 100%; color: black;">Reach us at team@talk2work.com</div>
+      <div style="width: 100%; height: 30%; text-align: center; position: relative; background-color: #373737">
+        <div style="padding-top: 5%; font-size: 35px;">Reach us at team@talk2work.com</div>
+        <div style="position: absolute; bottom: 0; width: 100%; color: black;"></div>
       </div>
       <div style="width: 100%; height: 70%; color: black; background-image: url(img/bg2.jpg); background-size: cover; text-align: center; position: relative;">
         <div style="font-size: 72px; color: rgb(142, 198, 62); padding-top: 10%;"><iframe width="420" height="315" src="//www.youtube.com/embed/fqjag1nzoF8" frameborder="0" allowfullscreen></iframe></div>
@@ -246,7 +254,9 @@
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.11.3/TweenMax.min.js"></script>
     <script type="text/javascript" src="jquery.superscrollorama.js"></script>
     <script type="text/javascript">
-      /*$(document).ready(function() {
+      /*
+<img src="img/logo.png" />
+      $(document).ready(function() {
         var controller = $.superscrollorama({
           triggerAtCenter: false,
           playoutAnimations: true
