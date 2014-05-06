@@ -218,6 +218,11 @@
     }, { duration: 500, queue: false });
   }
 
+  function addPersonToCarpool(person) {
+    addToSidebarPerson(person);
+    waypoints.push({ location: new google.maps.LatLng(person["lat"], person["lon"]), stopover: false});
+  }
+
   function loadMarkers(persons) {
     var infowindow = new google.maps.InfoWindow;
     var marker, i;
@@ -242,8 +247,7 @@
             // value already exists in the list -> do nothing
           } else {
             if(trip_unconfirmed) {
-              addToSidebarPerson(persons[i]);
-              waypoints.push({ location: new google.maps.LatLng(persons[i]["lat"], persons[i]["lon"]), stopover: false});
+              addPersonToCarpool(persons[i]);
               calculateRoute();
             }
           }
@@ -263,6 +267,10 @@
         }
       })(marker, i));
     }
+
+    addPersonToCarpool(persons[0]);
+    addPersonToCarpool(persons[1]);
+    calculateRoute();
   }
 
   function calculateRoute(callback) {
