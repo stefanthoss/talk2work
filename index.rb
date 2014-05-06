@@ -46,6 +46,7 @@ class MyApplication < Sinatra::Base
   end
 
   get '/auth/yammer/callback' do
+    current_user = nil
     # get oauth token from yammer
     if ENV['RACK_ENV'] == 'production'
       # do the real thing in production
@@ -57,18 +58,23 @@ class MyApplication < Sinatra::Base
       end
       oauth_token = JSON.parse(token_reponse.body)['access_token']['token']
       puts "authtoken: #{oauth_token}"
+
+      # get information about user from yammer
+      Yammer.configure do |c|
+        c.client_id = YAMMER_CLIENT_ID
+        c.client_secret = YAMMER_CLIENT_SECRET
+      end
+      yc = Yammer::Client.new(:access_token => oauth_token)
+      current_user = yc.current_user.body
     else
       # just use hardcoded dev token for development, will expire sometime
       oauth_token = YAMMER_DEV_TOKEN
+
+      # hard code user because yammer is stupid
+      current_user = { id: 1508111935, full_name: 'Tobias Jones' }
     end
 
-    # get information about user
-    Yammer.configure do |c|
-      c.client_id = YAMMER_CLIENT_ID
-      c.client_secret = YAMMER_CLIENT_SECRET
-    end
-    yc = Yammer::Client.new(:access_token => oauth_token)
-    current_user = yc.current_user.body
+    # get information about user from database
     if mysqlcon.query("SELECT COUNT(*) AS cnt FROM users WHERE id = #{current_user[:id]}").first['cnt'] != 1
       halt 500, "Could not find user with id #{current_user[:id]}"
     end
