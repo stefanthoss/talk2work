@@ -42,7 +42,7 @@ class MyApplication < Sinatra::Base
       # fake login in development
       @loginurl = "/auth/yammer/callback"
     end
-    erb :login, layout: nil
+    erb :landing, layout: nil
   end
 
   get '/auth/yammer/callback' do
